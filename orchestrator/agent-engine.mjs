@@ -588,7 +588,7 @@ Return ONLY raw file code, with NO markdown backticks.`;
 
       // Step 9: Action Approved - Execute Irreversible PR Creation
       addStep("User Approval Granted: Executing submit_pull_request", "IN_PROGRESS");
-      const prResult = await submitPullRequest(prPayload);
+      const prResult = await submitPullRequest({ ...prPayload, token: githubToken });
 
       addStep("Pull Request Successfully Created!", "COMPLETED", {
         prUrl: prResult.pr_url,
