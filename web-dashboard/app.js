@@ -570,14 +570,23 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(timerInterval);
 
         setNodeActive(5);
-        badgeDeployment.textContent = `PR #${data.result?.pr_number || 503} OPENED ✔`;
-        badgeDeployment.className = "text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
-
         const { result } = data;
-        prSuccessLink.href = result.pr_url;
-        prSuccessLink.innerHTML = `<span>View PR #${result.pr_number} on GitHub</span> <i data-lucide="external-link" class="w-3 h-3"></i>`;
-        prSuccessBar.classList.remove("hidden");
-        appendTerminal(`🎉 Pull Request created: ${result.pr_url}`, "t-green", "general");
+        const isLivePR = result && (result.mode === "live_github_pr" || (result.pr_url && result.pr_url.includes("github.com")));
+
+        if (isLivePR) {
+          badgeDeployment.textContent = `LIVE PR #${result.pr_number} CREATED ON GITHUB ✔`;
+          badgeDeployment.className = "text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+          prSuccessLink.href = result.pr_url;
+          prSuccessLink.innerHTML = `<span>View Live PR #${result.pr_number} on GitHub</span> <i data-lucide="external-link" class="w-3 h-3"></i>`;
+          prSuccessBar.classList.remove("hidden");
+          appendTerminal(`🎉 LIVE GitHub Pull Request Published: ${result.pr_url}`, "t-green", "general");
+        } else {
+          badgeDeployment.textContent = "PATCH STAGED (LOCAL) ✔";
+          badgeDeployment.className = "text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/40";
+          if (result && result.patch_file) {
+            appendTerminal(`📄 Patch verified & staged locally: ${result.patch_file}`, "t-cmd", "general");
+          }
+        }
         if (window.lucide) lucide.createIcons();
       }
 

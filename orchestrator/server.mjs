@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { execSync } from "child_process";
 import { ContribForgeEngine } from "./agent-engine.mjs";
 import { parseGitHubUrl, fetchGitHubIssue } from "../contribforge-mcp/tools/github.mjs";
+import { getSystemGitHubToken } from "../contribforge-mcp/tools/pr.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 4000;
@@ -21,7 +22,7 @@ app.use(express.static(path.resolve(__dirname, "../web-dashboard")));
 let engine = null;
 let globalSettings = {
   geminiApiKey: process.env.GEMINI_API_KEY || "",
-  githubToken: process.env.GITHUB_TOKEN || "",
+  githubToken: process.env.GITHUB_TOKEN || getSystemGitHubToken() || "",
   model: "gemini-2.5-flash"
 };
 
@@ -51,10 +52,14 @@ app.post("/api/run", async (req, res) => {
     repo = "micro-config",
     issueNumber = 14,
     issueUrl = null,
-    geminiApiKey = globalSettings.geminiApiKey,
-    githubToken = globalSettings.githubToken,
-    model = globalSettings.model
+    geminiApiKey,
+    githubToken,
+    model
   } = req.body || {};
+
+  const effectiveGeminiKey = (geminiApiKey && geminiApiKey.trim()) || globalSettings.geminiApiKey || process.env.GEMINI_API_KEY || "";
+  const effectiveGithubToken = (githubToken && githubToken.trim()) || globalSettings.githubToken || getSystemGitHubToken() || "";
+  const effectiveModel = model || globalSettings.model || "gemini-2.5-flash";
 
   if (engine && (engine.state === "RUNNING" || engine.state === "PAUSED_FOR_APPROVAL")) {
     console.log("[Server] Active session detected. Cancelling prior session to start fresh workflow.");
@@ -71,9 +76,9 @@ app.post("/api/run", async (req, res) => {
       repo,
       issueNumber,
       issueUrl,
-      apiKey: geminiApiKey,
-      githubToken,
-      model
+      apiKey: effectiveGeminiKey,
+      githubToken: effectiveGithubToken,
+      model: effectiveModel
     })
     .catch((err) => console.error("Workflow error:", err.message));
 });
