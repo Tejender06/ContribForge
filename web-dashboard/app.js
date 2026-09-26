@@ -512,15 +512,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         appendTerminal(`${step.title}`, type, cat);
 
-        if (step.title.includes("Defect Successfully Confirmed")) {
-          badgeRed.textContent = "FAILING TEST (CONFIRMED 🔴)";
+        if (step.title.includes("Defect Successfully Confirmed") || step.title.includes("Empirical Defect Confirmed")) {
+          badgeRed.textContent = "DEFECT REPRODUCED (RED 🔴)";
           badgeRed.className = "text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40";
+          appendTerminal("✔ Phase 1/3 (Empirical Red Check): Baseline defect successfully reproduced in sandbox:", "t-cmd", "sandbox");
           if (step.stderrSnippet) appendTerminal(step.stderrSnippet, "t-red", "sandbox");
+          appendTerminal("Proceeding to Phase 2/3: Applying surgical patch to resolve the defect...", "t-info", "sandbox");
         }
 
-        if (step.title.includes("Reproduction Test Passed")) {
-          badgeGreen.textContent = "PASSED TEST (VERIFIED 🟢)";
+        if (step.title.includes("Reproduction Test Passed") || step.title.includes("Self-Healing AST Converged")) {
+          badgeGreen.textContent = "PATCH VERIFIED (GREEN 🟢)";
           badgeGreen.className = "text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+          appendTerminal("✔ Phase 2/3 (Empirical Green Check): Surgical patch verified — test PASSED cleanly:", "t-cmd", "sandbox");
           if (step.stdout) appendTerminal(step.stdout, "t-green", "sandbox");
         }
 

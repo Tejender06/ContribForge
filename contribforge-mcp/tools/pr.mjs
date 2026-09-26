@@ -36,7 +36,8 @@ export async function submitPullRequest({
   head_branch = "fix-contribforge-patch",
   base_branch = "main",
   token = null,
-  files = []
+  files = [],
+  commit_message = null
 }) {
   const authToken = token || getSystemGitHubToken();
   const sandboxDir = getSandboxPath();
@@ -53,19 +54,12 @@ export async function submitPullRequest({
       // Determine files to commit from sandbox if not explicitly provided
       let filesToCommit = Array.isArray(files) && files.length > 0 ? files : [];
       if (filesToCommit.length === 0) {
-        // Collect modified files from sandbox
+        // Collect production files from sandbox
         const btcFile = path.join(sandboxDir, "test/functional/interface_http.py");
         if (fs.existsSync(btcFile)) {
           filesToCommit.push({
             path: "test/functional/interface_http.py",
             content: fs.readFileSync(btcFile, "utf8")
-          });
-        }
-        const btcRepro = path.join(sandboxDir, "test/functional/test_repro_36216.py");
-        if (fs.existsSync(btcRepro)) {
-          filesToCommit.push({
-            path: "test/functional/test_repro_36216.py",
-            content: fs.readFileSync(btcRepro, "utf8")
           });
         }
         const cfgFile = path.join(sandboxDir, "src/config-parser.js");
@@ -76,6 +70,13 @@ export async function submitPullRequest({
           });
         }
       }
+
+      // CRITICAL SWE QUALITY RULE: Strictly exclude scratch reproduction files from commits
+      filesToCommit = filesToCommit.filter(f => 
+        !f.path.includes("repro") && 
+        !f.path.includes(".test.") && 
+        !f.path.endsWith(".patch")
+      );
 
       const isBitcoin = owner.toLowerCase() === "bitcoin" && repo.toLowerCase() === "bitcoin";
       
@@ -112,9 +113,23 @@ export async function submitPullRequest({
         }
       }
 
-      const defaultBranch = repoData.default_branch || "main";
-      let baseSha = null;
+      const defaultBranch = repoData.default_branch || (isBitcoin ? "master" : "main");
 
+      // Auto-sync fork with upstream to guarantee a pristine, zero-noise base diff
+      if (userFork) {
+        try {
+          await octokit.rest.repos.mergeUpstream({
+            owner: pushOwner,
+            repo: pushRepo,
+            branch: defaultBranch
+          });
+          console.log(`[GitHub PR Engine] Fast-forwarded ${pushOwner}/${pushRepo}:${defaultBranch} with upstream.`);
+        } catch (syncErr) {
+          console.log(`[GitHub PR Engine] Fork upstream sync notice: ${syncErr.message}`);
+        }
+      }
+
+      let baseSha = null;
       try {
         const refRes = await octokit.rest.git.getRef({
           owner: pushOwner,
@@ -131,19 +146,38 @@ export async function submitPullRequest({
         baseSha = refRes.data.object.sha;
       }
 
-      const branchName = `${head_branch.replace(/[^a-zA-Z0-9_-]/g, "-")}-${Date.now().toString().slice(-4)}`;
+      // Professional semantic branch naming without random hash suffixes
+      const branchName = head_branch.replace(/[^a-zA-Z0-9_\-\/]/g, "-").replace(/--+/g, "-");
 
       if (baseSha) {
-        // Create new branch on GitHub
-        await octokit.rest.git.createRef({
-          owner: pushOwner,
-          repo: pushRepo,
-          ref: `refs/heads/${branchName}`,
-          sha: baseSha
-        });
-        console.log(`[GitHub PR Engine] Created remote branch refs/heads/${branchName} on ${pushOwner}/${pushRepo}`);
+        // Create or update remote branch cleanly on GitHub
+        try {
+          await octokit.rest.git.getRef({
+            owner: pushOwner,
+            repo: pushRepo,
+            ref: `heads/${branchName}`
+          });
+          // Update ref to latest baseSha
+          await octokit.rest.git.updateRef({
+            owner: pushOwner,
+            repo: pushRepo,
+            ref: `heads/${branchName}`,
+            sha: baseSha,
+            force: true
+          });
+          console.log(`[GitHub PR Engine] Reset remote branch refs/heads/${branchName} to upstream baseSha`);
+        } catch {
+          await octokit.rest.git.createRef({
+            owner: pushOwner,
+            repo: pushRepo,
+            ref: `refs/heads/${branchName}`,
+            sha: baseSha
+          });
+          console.log(`[GitHub PR Engine] Created remote branch refs/heads/${branchName} on ${pushOwner}/${pushRepo}`);
+        }
 
-        // Commit all changed files to the branch
+        // Commit production changes
+        const commitMsg = commit_message || title;
         for (const file of filesToCommit) {
           let fileSha = null;
           try {
@@ -160,7 +194,7 @@ export async function submitPullRequest({
             owner: pushOwner,
             repo: pushRepo,
             path: file.path,
-            message: `fix: ${title}`,
+            message: commitMsg,
             content: Buffer.from(file.content, "utf8").toString("base64"),
             branch: branchName,
             ...(fileSha ? { sha: fileSha } : {})
@@ -168,11 +202,35 @@ export async function submitPullRequest({
           console.log(`[GitHub PR Engine] Committed ${file.path} to ${pushOwner}/${pushRepo}@${branchName}`);
         }
 
-        // Open the REAL GitHub Pull Request!
+        // Open or update the REAL GitHub Pull Request!
         let pr = null;
 
+        // Check if there is already an open PR for this head branch
+        try {
+          const existingPulls = await octokit.rest.pulls.list({
+            owner: pushOwner,
+            repo: pushRepo,
+            head: `${pushOwner}:${branchName}`,
+            state: "open"
+          });
+          if (existingPulls.data && existingPulls.data.length > 0) {
+            const existing = existingPulls.data[0];
+            const updatedPr = await octokit.rest.pulls.update({
+              owner: pushOwner,
+              repo: pushRepo,
+              pull_number: existing.number,
+              title,
+              body
+            });
+            pr = updatedPr.data;
+            console.log(`[GitHub PR Engine] Updated existing open PR #${pr.number} on ${pushOwner}/${pushRepo}`);
+          }
+        } catch (searchErr) {
+          console.warn(`[GitHub PR Engine] PR check notice: ${searchErr.message}`);
+        }
+
         // Attempt 1: If fork of upstream (and not Bitcoin Core upstream), try opening upstream PR
-        if (owner.toLowerCase() !== pushOwner.toLowerCase() && !isBitcoin) {
+        if (!pr && owner.toLowerCase() !== pushOwner.toLowerCase() && !isBitcoin) {
           try {
             const prRes = await octokit.rest.pulls.create({
               owner,
