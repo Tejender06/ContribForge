@@ -1,4 +1,15 @@
+/**
+ * ContribForge — Web Client Architecture & Autonomous Agent Controller
+ * Multi-model support (Gemini 2.5 Flash / Heuristic AST Engine)
+ * Test-Driven Agentics (TDA) streaming with Monaco Diff and Lucide Icons
+ */
+
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize Lucide Icons
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+
   // Action & Status Elements
   const runBtn = document.getElementById("runBtn");
   const runBtnText = document.getElementById("runBtnText");
@@ -32,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Settings Modal Elements
   const settingsModal = document.getElementById("settingsModal");
   const openSettingsBtn = document.getElementById("openSettingsBtn");
-  const settingsNavBtn = document.getElementById("settingsNavBtn");
+  const mobileSettingsBtn = document.getElementById("mobileSettingsBtn");
   const closeSettingsBtn = document.getElementById("closeSettingsBtn");
   const saveSettingsBtn = document.getElementById("saveSettingsBtn");
   const geminiKeyInput = document.getElementById("geminiKeyInput");
@@ -46,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Help Modal Elements
   const helpModal = document.getElementById("helpModal");
-  const helpNavBtn = document.getElementById("helpNavBtn");
+  const mobileHelpBtn = document.getElementById("mobileHelpBtn");
   const closeHelpBtn = document.getElementById("closeHelpBtn");
 
   // Badges & Nodes
@@ -60,6 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const prSuccessLink = document.getElementById("prSuccessLink");
   const closeSuccessBtn = document.getElementById("closeSuccessBtn");
 
+  // Mobile Tabs
+  const tabPipelineBtn = document.getElementById("tabPipelineBtn");
+  const tabDiffBtn = document.getElementById("tabDiffBtn");
+  const pipelineSection = document.getElementById("pipelineSection");
+  const diffSection = document.getElementById("diffSection");
+
   let timerInterval = null;
   let startTime = null;
   let currentLogCategory = "all";
@@ -71,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
     "Issue Context Extracted": 0,
     "Reasoning with gemini-2.5-flash": 1,
     "Reasoning with gemini-1.5-pro": 1,
-    "Reasoning with gpt-4o": 1,
     "Gemini Synthesized Reproduction Test": 1,
     "Activating Autonomous Heuristic AST Engine": 1,
     "Synthesizing Reproduction Test Script": 1,
@@ -84,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "Reproduction Test Passed (🟢 GREEN)": 3,
     "Running Full Test Suite (Zero-Regression Check)": 3,
     "Full Test Suite Passed: Zero Regressions": 3,
+    "Git Diff Generated": 3,
     "🛡️ PAUSED: Human Approval Required for Irreversible Action": 4,
     "User Approval Granted: Executing submit_pull_request": 5,
     "Pull Request Successfully Created!": 5
@@ -123,24 +140,24 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateKeyStatusBadges(geminiKey, githubToken) {
     if (geminiKey && geminiKey.trim().startsWith("AIzaSy")) {
       geminiStatusBadge.textContent = "Active (Gemini 2.5 Flash)";
-      geminiStatusBadge.className = "setting-badge configured";
-      keyIndicatorDot.className = "key-indicator-dot active";
+      geminiStatusBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+      if (keyIndicatorDot) keyIndicatorDot.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400";
     } else if (geminiKey && geminiKey.trim().length > 0) {
-      geminiStatusBadge.textContent = "Autonomous Heuristic (Key requires AIzaSy...)";
-      geminiStatusBadge.className = "setting-badge";
-      keyIndicatorDot.className = "key-indicator-dot";
+      geminiStatusBadge.textContent = "Autonomous Heuristic (Needs AIzaSy...)";
+      geminiStatusBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+      if (keyIndicatorDot) keyIndicatorDot.className = "w-2 h-2 rounded-full bg-amber-400";
     } else {
       geminiStatusBadge.textContent = "Offline (Heuristic AST Mode)";
-      geminiStatusBadge.className = "setting-badge";
-      keyIndicatorDot.className = "key-indicator-dot";
+      geminiStatusBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400";
+      if (keyIndicatorDot) keyIndicatorDot.className = "w-2 h-2 rounded-full bg-slate-500";
     }
 
     if (githubToken && (githubToken.trim().startsWith("ghp_") || githubToken.trim().startsWith("github_pat_") || githubToken.trim().length > 20)) {
       githubStatusBadge.textContent = "Authenticated (Live PR Enabled)";
-      githubStatusBadge.className = "setting-badge configured";
+      githubStatusBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
     } else {
       githubStatusBadge.textContent = "Public / Staged PR Mode";
-      githubStatusBadge.className = "setting-badge";
+      githubStatusBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400";
     }
   }
 
@@ -152,12 +169,12 @@ document.addEventListener("DOMContentLoaded", () => {
     .then((data) => {
       if (data.hasGeminiKey && !geminiKeyInput.value) {
         geminiStatusBadge.textContent = "Active (Server Environment)";
-        geminiStatusBadge.className = "setting-badge configured";
-        keyIndicatorDot.className = "key-indicator-dot active";
+        geminiStatusBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+        if (keyIndicatorDot) keyIndicatorDot.className = "w-2 h-2 rounded-full bg-emerald-400";
       }
       if (data.hasGithubToken && !githubTokenInput.value) {
         githubStatusBadge.textContent = "Authenticated (Server Token)";
-        githubStatusBadge.className = "setting-badge configured";
+        githubStatusBadge.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
       }
     })
     .catch(() => {});
@@ -165,14 +182,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Settings Modal Handlers
   function openSettings() {
     settingsModal.classList.remove("hidden");
+    if (window.lucide) lucide.createIcons();
   }
   function closeSettings() {
     settingsModal.classList.add("hidden");
   }
 
-  openSettingsBtn.addEventListener("click", openSettings);
-  settingsNavBtn.addEventListener("click", openSettings);
-  closeSettingsBtn.addEventListener("click", closeSettings);
+  if (openSettingsBtn) openSettingsBtn.addEventListener("click", openSettings);
+  if (mobileSettingsBtn) mobileSettingsBtn.addEventListener("click", openSettings);
+  if (closeSettingsBtn) closeSettingsBtn.addEventListener("click", closeSettings);
 
   saveSettingsBtn.addEventListener("click", async () => {
     const geminiVal = geminiKeyInput.value.trim();
@@ -210,8 +228,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Help Modal Handlers
-  helpNavBtn.addEventListener("click", () => helpModal.classList.remove("hidden"));
-  closeHelpBtn.addEventListener("click", () => helpModal.classList.add("hidden"));
+  if (mobileHelpBtn) mobileHelpBtn.addEventListener("click", () => helpModal.classList.remove("hidden"));
+  if (closeHelpBtn) closeHelpBtn.addEventListener("click", () => helpModal.classList.add("hidden"));
 
   // 2. Preset & Issue URL Management
   issueSelect.addEventListener("change", () => {
@@ -230,7 +248,29 @@ document.addEventListener("DOMContentLoaded", () => {
       topbarRepoBadge.textContent = `${preset.owner} / ${preset.repo} > Issue #${preset.number}`;
       runBtnText.textContent = `Solve Issue #${preset.number}`;
       node0Desc.textContent = `Fetch issue #${preset.number}: ${preset.desc}`;
+      
+      // Update quick chips
+      document.querySelectorAll(".quick-chip").forEach((chip) => {
+        if (chip.dataset.url === preset.url) {
+          chip.classList.add("active");
+        } else {
+          chip.classList.remove("active");
+        }
+      });
     }
+  });
+
+  // Quick Chips Handler
+  document.querySelectorAll(".quick-chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      document.querySelectorAll(".quick-chip").forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+      const url = chip.dataset.url;
+      if (url) {
+        issueUrlInput.value = url;
+        loadIssueFromUrl();
+      }
+    });
   });
 
   // Load Issue URL Handler
@@ -271,7 +311,26 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize with Issue #14 URL
   issueUrlInput.value = PRESET_ISSUES["14"].url;
 
-  // 3. Timer & Terminal Logging
+  // 3. Mobile Tab Switcher
+  if (tabPipelineBtn && tabDiffBtn && pipelineSection && diffSection) {
+    tabPipelineBtn.addEventListener("click", () => {
+      tabPipelineBtn.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-violet-600 text-white shadow-sm transition-all flex items-center justify-center gap-1.5";
+      tabDiffBtn.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5";
+      pipelineSection.classList.remove("hidden");
+      diffSection.classList.add("hidden");
+      diffSection.classList.remove("flex");
+    });
+
+    tabDiffBtn.addEventListener("click", () => {
+      tabDiffBtn.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-violet-600 text-white shadow-sm transition-all flex items-center justify-center gap-1.5";
+      tabPipelineBtn.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5";
+      diffSection.classList.remove("hidden");
+      diffSection.classList.add("flex");
+      pipelineSection.classList.add("hidden");
+    });
+  }
+
+  // 4. Timer & Terminal Logging
   function updateTimer() {
     if (!startTime) return;
     const elapsed = Math.floor((Date.now() - startTime) / 1000);
@@ -295,8 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .map((el) => el.textContent)
       .join("\n");
     navigator.clipboard.writeText(logs).then(() => {
-      copyLogsBtn.textContent = "Copied!";
-      setTimeout(() => (copyLogsBtn.textContent = "Copy"), 1500);
+      appendTerminal("Terminal logs copied to clipboard.", "t-green");
     });
   });
 
@@ -306,10 +364,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Terminal Category Filter Tabs
-  document.querySelectorAll(".terminal-tab-group .tab-item").forEach((btn) => {
+  document.querySelectorAll(".terminal-tab").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".terminal-tab-group .tab-item").forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
+      document.querySelectorAll(".terminal-tab").forEach((b) => {
+        b.className = "terminal-tab px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition-all";
+      });
+      btn.className = "terminal-tab active px-2.5 py-1 rounded-lg bg-violet-600 text-white transition-all";
       currentLogCategory = btn.dataset.filter || "all";
 
       terminalOutput.querySelectorAll(".t-line").forEach((line) => {
@@ -328,13 +388,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const el = document.getElementById(`node-${i}`);
       if (!el) continue;
       if (i < nodeIndex) {
-        el.className = "dag-node completed";
+        el.className = "dag-node-item rounded-xl p-3.5 bg-slate-950/60 border border-emerald-500/40 completed transition-all";
       } else if (i === nodeIndex) {
-        el.className = "dag-node active" + (i === 4 ? " dag-node-gated" : "");
+        el.className = "dag-node-item rounded-xl p-3.5 active transition-all";
       } else {
-        el.className = "dag-node" + (i === 4 ? " dag-node-gated" : "");
+        el.className = "dag-node-item rounded-xl p-3.5 bg-slate-950/60 border border-white/10 transition-all";
       }
     }
+    if (window.lucide) lucide.createIcons();
   }
 
   // Monaco Unified Diff Renderer
@@ -364,7 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
     diffStatPill.textContent = `+${addCount} -${delCount}`;
   }
 
-  // 4. WebSocket Real-Time Connection
+  // 5. WebSocket Real-Time Connection
   const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
   const socket = new WebSocket(`${protocol}//${window.location.host}`);
 
@@ -402,13 +463,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (step.title.includes("Defect Successfully Confirmed")) {
           badgeRed.textContent = "FAILING TEST (CONFIRMED 🔴)";
-          badgeRed.className = "node-badge badge-red";
+          badgeRed.className = "text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40";
           if (step.stderrSnippet) appendTerminal(step.stderrSnippet, "t-red", "sandbox");
         }
 
         if (step.title.includes("Reproduction Test Passed")) {
           badgeGreen.textContent = "PASSED TEST (VERIFIED 🟢)";
-          badgeGreen.className = "node-badge badge-green";
+          badgeGreen.className = "text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
           if (step.stdout) appendTerminal(step.stdout, "t-green", "sandbox");
         }
 
@@ -420,8 +481,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (data.type === "approval_required") {
-        pipelineStatus.innerHTML = `<span class="pulse-dot"></span> PAUSED (HITL GATE)`;
-        pipelineStatus.className = "status-indicator-badge gated";
+        pipelineStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span> <span>PAUSED (HITL GATE)</span>`;
+        pipelineStatus.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-amber-500/20 border border-amber-500/40 text-amber-300";
 
         modalTarget.textContent = `${data.payload.owner}/${data.payload.repo}`;
         modalBranch.textContent = data.payload.head_branch;
@@ -432,29 +493,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
         approvalModal.classList.remove("hidden");
         appendTerminal("🛡️ TRUEFORGE HARNESS: Execution paused at Human-in-the-Loop gate.", "t-gate", "gate");
+        if (window.lucide) lucide.createIcons();
       }
 
       if (data.type === "workflow_completed") {
-        pipelineStatus.innerHTML = `<span class="pulse-dot"></span> COMPLETED`;
-        pipelineStatus.className = "status-indicator-badge completed";
+        pipelineStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> <span>COMPLETED</span>`;
+        pipelineStatus.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-emerald-500/20 border border-emerald-500/40 text-emerald-300";
         runBtn.disabled = false;
         cancelBtn.classList.add("hidden");
         clearInterval(timerInterval);
 
         setNodeActive(5);
         badgeDeployment.textContent = `PR #${data.result?.pr_number || 503} OPENED ✔`;
-        badgeDeployment.className = "node-badge badge-green";
+        badgeDeployment.className = "text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
 
         const { result } = data;
         prSuccessLink.href = result.pr_url;
-        prSuccessLink.textContent = `View PR #${result.pr_number} on GitHub →`;
+        prSuccessLink.innerHTML = `<span>View PR #${result.pr_number} on GitHub</span> <i data-lucide="external-link" class="w-3 h-3"></i>`;
         prSuccessBar.classList.remove("hidden");
         appendTerminal(`🎉 Pull Request created: ${result.pr_url}`, "t-green", "general");
+        if (window.lucide) lucide.createIcons();
       }
 
       if (data.type === "workflow_error") {
-        pipelineStatus.innerHTML = `<span class="pulse-dot"></span> ERROR`;
-        pipelineStatus.className = "status-indicator-badge";
+        pipelineStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> <span>ERROR</span>`;
+        pipelineStatus.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-rose-500/20 border border-rose-500/40 text-rose-300";
         runBtn.disabled = false;
         cancelBtn.classList.add("hidden");
         clearInterval(timerInterval);
@@ -465,14 +528,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // 5. Workflow Trigger Execution
+  // 6. Workflow Trigger Execution
   async function triggerWorkflow() {
     if (runBtn.disabled) return;
     runBtn.disabled = true;
     cancelBtn.classList.remove("hidden");
+    cancelBtn.classList.add("inline-flex");
     prSuccessBar.classList.add("hidden");
-    pipelineStatus.innerHTML = `<span class="pulse-dot"></span> RUNNING`;
-    pipelineStatus.className = "status-indicator-badge running";
+    pipelineStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-violet-400 animate-ping"></span> <span>RUNNING</span>`;
+    pipelineStatus.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-violet-500/20 border border-violet-500/40 text-violet-300";
 
     terminalOutput.innerHTML = "";
     startTime = Date.now();
@@ -514,6 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
       appendTerminal(`Failed to start: ${err.message}`, "t-red", "general");
       runBtn.disabled = false;
       cancelBtn.classList.add("hidden");
+      cancelBtn.classList.remove("inline-flex");
     }
   }
 
@@ -523,10 +588,11 @@ document.addEventListener("DOMContentLoaded", () => {
   cancelBtn.addEventListener("click", async () => {
     await fetch("/api/cancel", { method: "POST" });
     cancelBtn.classList.add("hidden");
+    cancelBtn.classList.remove("inline-flex");
     runBtn.disabled = false;
     clearInterval(timerInterval);
-    pipelineStatus.innerHTML = `<span class="pulse-dot"></span> IDLE`;
-    pipelineStatus.className = "status-indicator-badge";
+    pipelineStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span> <span>IDLE</span>`;
+    pipelineStatus.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-slate-800/80 border border-white/10 text-slate-300";
     appendTerminal("Session cancelled by operator.", "t-red", "general");
   });
 
@@ -555,28 +621,11 @@ document.addEventListener("DOMContentLoaded", () => {
     prSuccessBar.classList.add("hidden");
   });
 
-  // Global Keyboard Shortcuts
-  window.addEventListener("keydown", (e) => {
-    const isCmd = e.metaKey || e.ctrlKey;
-    if (isCmd && e.key === "r" && !runBtn.disabled) {
+  // Keyboard Shortcuts: Cmd+R or Ctrl+R to run
+  document.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "r") {
       e.preventDefault();
       triggerWorkflow();
-    }
-    if (isCmd && e.key === "Enter" && !approvalModal.classList.contains("hidden")) {
-      e.preventDefault();
-      approveBtn.click();
-    }
-    if (e.key === "Escape") {
-      if (!approvalModal.classList.contains("hidden")) {
-        e.preventDefault();
-        denyBtn.click();
-      } else if (!settingsModal.classList.contains("hidden")) {
-        e.preventDefault();
-        closeSettings();
-      } else if (!helpModal.classList.contains("hidden")) {
-        e.preventDefault();
-        helpModal.classList.add("hidden");
-      }
     }
   });
 });

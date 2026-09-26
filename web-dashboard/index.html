@@ -1,495 +1,616 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ContribForge — Autonomous AI Developer Agent</title>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              900: '#4c1d95',
+              950: '#2e1065',
+            },
+            dark: {
+              bg: '#080c14',
+              surface: '#0f172a',
+              card: 'rgba(15, 23, 42, 0.72)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              hover: 'rgba(255, 255, 255, 0.05)'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Enhanced Stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="theme-dark">
-  <div class="shell-container">
-    <!-- Slim Left Icon Sidebar -->
-    <aside class="sidebar-rail">
-      <div class="sidebar-top">
-        <a href="#" class="brand-logo" title="ContribForge">
-          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-        </a>
-        <nav class="nav-icons">
-          <button class="nav-btn active" title="Agent Pipeline" id="navPipelineBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
-              <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
-              <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
-              <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
-            </svg>
-          </button>
-          <button class="nav-btn" title="API Keys & Settings" id="settingsNavBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-          </button>
-          <button class="nav-btn" title="View Source on GitHub" id="githubRepoBtn" onclick="window.open('https://github.com/Tejender06/ContribForge', '_blank')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-            </svg>
-          </button>
-        </nav>
-      </div>
-      <div class="sidebar-bottom">
-        <button class="nav-btn" title="Hackathon Architecture Guide" id="helpNavBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-          </svg>
-        </button>
-        <div class="avatar-pill" title="Tejender Singh (Lead Architect)">TS</div>
-      </div>
-    </aside>
+<body class="bg-[#070b12] text-slate-100 font-sans min-h-screen selection:bg-violet-500/30 selection:text-violet-200 antialiased overflow-x-hidden">
 
-    <!-- Main Application View -->
-    <div class="workspace-area">
-      <!-- Top Header Navigation -->
-      <header class="app-topbar">
-        <div class="topbar-left">
-          <span class="back-link" title="TrueFoundry x Polaris Hackathon">⚡</span>
-          <span class="project-title">ContribForge</span>
-          <span class="separator">/</span>
-          <span class="repo-badge" id="topbarRepoBadge">truefoundry / micro-config &gt; Issue #14</span>
+  <!-- Ambient Glow Effects -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/3 -right-40 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl"></div>
+  </div>
+
+  <div class="relative z-10 flex flex-col min-h-screen">
+    
+    <!-- Topbar Navigation -->
+    <header class="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/85 border-b border-white/10 px-3 sm:px-6 py-2.5 sm:py-3 transition-all">
+      <div class="max-w-[1720px] mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
+        
+        <!-- Left: Brand Logo & Target Repo Badge -->
+        <div class="flex items-center justify-between gap-2 sm:gap-3 flex-wrap">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 via-violet-600 to-cyan-500 p-0.5 shadow-lg shadow-indigo-500/25 flex items-center justify-center">
+              <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                <i data-lucide="zap" class="w-4 h-4 text-violet-400 fill-violet-400"></i>
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="font-bold text-base sm:text-lg tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">ContribForge</span>
+                <span class="text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">AI Agent</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hidden sm:flex items-center text-xs font-mono text-slate-400 bg-slate-900/80 border border-white/10 rounded-lg px-2.5 py-1">
+            <span class="text-slate-500 mr-1.5">target:</span>
+            <span class="text-cyan-400 font-medium" id="topbarRepoBadge">truefoundry / micro-config > Issue #14</span>
+          </div>
+
+          <!-- Mobile Controls Quick Toggle -->
+          <div class="flex md:hidden items-center gap-1.5 ml-auto">
+            <button id="mobileSettingsBtn" class="p-2 text-slate-300 hover:text-white bg-slate-900 border border-white/10 rounded-lg" title="Settings">
+              <i data-lucide="key" class="w-4 h-4 text-violet-400"></i>
+            </button>
+            <button id="mobileHelpBtn" class="p-2 text-slate-300 hover:text-white bg-slate-900 border border-white/10 rounded-lg" title="Help">
+              <i data-lucide="help-circle" class="w-4 h-4 text-slate-400"></i>
+            </button>
+          </div>
         </div>
 
-        <!-- Real GitHub Issue URL Input -->
-        <div class="topbar-issue-input-wrap">
-          <svg class="gh-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-          </svg>
-          <input type="text" id="issueUrlInput" placeholder="Paste GitHub Issue URL (e.g. https://github.com/owner/repo/issues/14)" />
-          <button id="loadUrlBtn" class="input-inline-btn" title="Fetch live GitHub issue">Load</button>
+        <!-- Center: Interactive GitHub Issue Input Bar -->
+        <div class="flex-1 max-w-2xl w-full">
+          <div class="relative flex items-center">
+            <div class="absolute left-3 pointer-events-none text-slate-400 flex items-center">
+              <i data-lucide="github" class="w-4 h-4"></i>
+            </div>
+            <input 
+              type="text" 
+              id="issueUrlInput" 
+              placeholder="Paste any GitHub Issue URL (e.g. https://github.com/owner/repo/issues/14)" 
+              class="w-full pl-9 pr-24 py-1.5 sm:py-2 text-xs sm:text-sm bg-slate-900/90 text-slate-100 placeholder-slate-500 rounded-xl border border-white/10 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 focus:outline-none transition-all shadow-inner"
+            />
+            <div class="absolute right-1.5 flex items-center gap-1">
+              <button 
+                id="loadUrlBtn" 
+                class="px-2.5 py-1 text-xs font-medium rounded-lg bg-violet-600 hover:bg-violet-500 text-white transition-all flex items-center gap-1 shadow-sm shadow-violet-600/30"
+                title="Fetch live issue from GitHub"
+              >
+                <span>Load</span>
+                <i data-lucide="corner-down-left" class="w-3 h-3"></i>
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div class="topbar-right">
+        <!-- Right: Actions, Presets & Run Button -->
+        <div class="flex items-center gap-2 sm:gap-2.5 justify-end flex-wrap">
+          
           <!-- Preset Selector -->
-          <div class="issue-selector-capsule">
-            <span class="issue-selector-icon">🎯</span>
-            <label for="issueSelect" class="selector-label">Preset:</label>
-            <select id="issueSelect" class="issue-dropdown">
+          <div class="relative flex items-center">
+            <select id="issueSelect" class="text-xs bg-slate-900/90 text-slate-200 border border-white/10 rounded-xl px-2.5 py-2 pr-7 appearance-none focus:outline-none focus:border-violet-500 cursor-pointer font-medium hover:border-white/20 transition-all">
               <option value="14" selected>#14: PORT TypeError (micro-config)</option>
               <option value="12">#12: Scheme Prefix in parseHost</option>
               <option value="custom">Custom Issue URL...</option>
             </select>
+            <div class="absolute right-2.5 pointer-events-none text-slate-400">
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </div>
           </div>
 
-          <!-- Telemetry Stats -->
-          <div class="telemetry-capsule">
-            <span class="tele-item"><span class="dot-cpu"></span> CPU: 1.2 vCPU</span>
-            <span class="tele-divider">|</span>
-            <span class="tele-item"><span class="dot-mem"></span> MEM: 3.4 GB</span>
+          <!-- Telemetry Pill (Desktop) -->
+          <div class="hidden xl:flex items-center gap-2 text-[11px] font-mono bg-slate-900/70 border border-white/10 rounded-xl px-2.5 py-1.5 text-slate-400">
+            <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> CPU: 1.2</span>
+            <span class="text-slate-600">|</span>
+            <span>MEM: 3.4G</span>
           </div>
 
           <!-- Settings Button -->
-          <button id="openSettingsBtn" class="action-btn-secondary" title="Configure API Keys &amp; Reasoning Model">
-            <svg class="gear-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-            <span class="btn-text-label">Keys</span>
-            <span class="key-indicator-dot" id="keyIndicatorDot"></span>
+          <button 
+            id="openSettingsBtn" 
+            class="hidden md:flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-white/10 hover:border-white/20 transition-all shadow-sm"
+            title="Configure Gemini API Key & GitHub Token"
+          >
+            <i data-lucide="key" class="w-3.5 h-3.5 text-violet-400"></i>
+            <span>Keys</span>
+            <span class="w-2 h-2 rounded-full bg-slate-500 transition-all" id="keyIndicatorDot"></span>
           </button>
 
-          <!-- Cancel Button -->
-          <button id="cancelBtn" class="action-btn-danger hidden" title="Cancel Running Session">
+          <!-- Cancel Session Button (hidden by default) -->
+          <button 
+            id="cancelBtn" 
+            class="hidden items-center gap-1 px-3 py-2 text-xs font-medium rounded-xl bg-rose-950/80 text-rose-300 border border-rose-500/30 hover:bg-rose-900 transition-all"
+            title="Cancel Running Workflow"
+          >
+            <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
             <span>Cancel</span>
           </button>
 
-          <!-- Run Button -->
-          <button id="runBtn" class="action-btn-primary">
-            <span class="btn-glow"></span>
-            <svg class="btn-play-icon" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-            <span id="runBtnText">Solve Issue &amp; Open PR</span>
-            <kbd class="kbd-btn">⌘R</kbd>
+          <!-- Main Primary Action: Solve Issue & Open PR -->
+          <button 
+            id="runBtn" 
+            class="group relative inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2 text-xs sm:text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-600 hover:from-violet-500 hover:via-indigo-500 hover:to-cyan-500 shadow-lg shadow-violet-600/30 hover:shadow-violet-600/50 focus:outline-none focus:ring-2 focus:ring-violet-500/40 active:scale-[0.98] transition-all"
+          >
+            <i data-lucide="play" class="w-4 h-4 fill-white text-white group-hover:scale-110 transition-transform"></i>
+            <span id="runBtnText">Solve Issue & Open PR</span>
+            <kbd class="hidden sm:inline-block ml-1 px-1.5 py-0.5 text-[10px] font-mono bg-black/30 rounded border border-white/20 text-slate-300">⌘R</kbd>
           </button>
         </div>
-      </header>
+      </div>
 
-      <!-- Main Dual-Pane Dashboard -->
-      <main class="dashboard-body">
-        <!-- Left Pane: Node-Based Pipeline Graph -->
-        <section class="dag-canvas-container">
-          <div class="canvas-header">
-            <div class="canvas-title-group">
-              <span class="canvas-title">EXECUTION PIPELINE GRAPH</span>
-              <span class="canvas-subtitle">Hermetic Sandbox Execution &amp; HITL Boundary</span>
-            </div>
-            <div class="status-indicator-badge" id="pipelineStatus">
-              <span class="pulse-dot"></span> IDLE
-            </div>
-          </div>
+      <!-- Quick Issue Presets Pills (Responsive quick launcher) -->
+      <div class="max-w-[1720px] mx-auto mt-2 pt-2 border-t border-white/5 flex items-center gap-2 overflow-x-auto text-[11px] pb-1 scrollbar-none">
+        <span class="text-slate-500 whitespace-nowrap font-medium flex items-center gap-1">
+          <i data-lucide="sparkles" class="w-3 h-3 text-violet-400"></i> Quick Sample:
+        </span>
+        <button class="quick-chip active px-2.5 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-300 hover:bg-violet-500/25 whitespace-nowrap transition-all" data-url="https://github.com/truefoundry/micro-config/issues/14">
+          micro-config #14 (PORT TypeError)
+        </button>
+        <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/truefoundry/micro-config/issues/12">
+          micro-config #12 (Host Scheme)
+        </button>
+        <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/facebook/react/issues/28000">
+          facebook/react #28000
+        </button>
+        <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/expressjs/express/issues/5000">
+          expressjs/express #5000
+        </button>
+      </div>
 
-          <div class="dag-graph">
-            <!-- Node 1: Issue Ingestion -->
-            <div class="dag-node" id="node-0">
-              <div class="node-icon-box">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                  <line x1="16" y1="13" x2="8" y2="13"></line>
-                  <line x1="16" y1="17" x2="8" y2="17"></line>
-                  <polyline points="10 9 9 9 8 9"></polyline>
-                </svg>
+      <!-- Mobile Tab Switcher (Visible on < 1024px) -->
+      <div class="flex lg:hidden items-center justify-center gap-2 mt-2 pt-2 border-t border-white/10">
+        <div class="bg-slate-900 p-1 rounded-xl border border-white/10 flex items-center w-full max-w-sm">
+          <button id="tabPipelineBtn" class="flex-1 py-1.5 text-xs font-semibold rounded-lg bg-violet-600 text-white shadow-sm transition-all flex items-center justify-center gap-1.5">
+            <i data-lucide="git-merge" class="w-3.5 h-3.5"></i>
+            <span>Pipeline DAG</span>
+          </button>
+          <button id="tabDiffBtn" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5">
+            <i data-lucide="code-2" class="w-3.5 h-3.5"></i>
+            <span>Diff & Terminal</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Dual-Pane Dashboard Grid -->
+    <main class="flex-1 max-w-[1720px] w-full mx-auto p-3 sm:p-5 lg:p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        
+        <!-- Left Pane: Node-Based Pipeline Graph (5 cols) -->
+        <section id="pipelineSection" class="lg:col-span-5 flex flex-col gap-4">
+          <div class="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40">
+            
+            <!-- Graph Header with Live Status -->
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+              <div>
+                <h2 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+                  <i data-lucide="git-commit" class="w-4 h-4 text-violet-400"></i>
+                  Execution Pipeline Graph
+                </h2>
+                <p class="text-[11px] text-slate-500 mt-0.5">Hermetic Sandbox Execution & HITL Boundary</p>
               </div>
-              <div class="node-content">
-                <div class="node-title">Issue Ingestion</div>
-                <div class="node-desc" id="node0Desc">Fetch issue details &amp; stack trace from GitHub</div>
-                <div class="node-badge badge-neutral" id="node0Badge">INITIAL RECON</div>
-              </div>
-            </div>
 
-            <!-- Connector 1 -> 2 -->
-            <div class="dag-connector-v"></div>
-
-            <!-- Node 2: Hermetic Sandbox Red Check -->
-            <div class="dag-node" id="node-1">
-              <div class="node-icon-box node-icon-red">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="15" y1="9" x2="9" y2="15"></line>
-                  <line x1="9" y1="9" x2="15" y2="15"></line>
-                </svg>
-              </div>
-              <div class="node-content">
-                <div class="node-title">Hermetic Sandbox Red Check</div>
-                <div class="node-desc" id="node1Desc">Author repro test &amp; confirm defect (Empirical Red)</div>
-                <div class="node-badge badge-red" id="badgeRed">FAILING TEST (RED)</div>
-              </div>
-            </div>
-
-            <!-- Connector 2 -> 3 -->
-            <div class="dag-connector-v"></div>
-
-            <!-- Node 3: Surgical AST Patch -->
-            <div class="dag-node" id="node-2">
-              <div class="node-icon-box node-icon-cyan">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="16 18 22 12 16 6"></polyline>
-                  <polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-              </div>
-              <div class="node-content">
-                <div class="node-title">Surgical AST Patch</div>
-                <div class="node-desc" id="node2Desc">Serena symbol refactor &amp; defensive boundary fix</div>
-                <div class="node-badge badge-cyan" id="node2Badge">AST SYMBOL FIX</div>
+              <!-- Pipeline Status Badge -->
+              <div id="pipelineStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-slate-800/80 border border-white/10 text-slate-300">
+                <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                <span>IDLE</span>
               </div>
             </div>
 
-            <!-- Connector 3 -> 4 -->
-            <div class="dag-connector-v"></div>
+            <!-- DAG Sequential Nodes List -->
+            <div class="dag-nodes-container flex flex-col relative space-y-3.5">
+              
+              <!-- Node 0: Issue Ingestion -->
+              <div class="dag-node-item rounded-xl p-3.5 bg-slate-950/60 border border-white/10 transition-all" id="node-0">
+                <div class="flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2">
+                      <h3 class="text-xs sm:text-sm font-semibold text-slate-200">Issue Ingestion</h3>
+                      <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-white/5">INITIAL RECON</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-0.5 truncate" id="node0Desc">Fetch issue details & stack trace from GitHub</p>
+                  </div>
+                </div>
+              </div>
 
-            <!-- Node 4: Sandbox Green Check -->
-            <div class="dag-node" id="node-3">
-              <div class="node-icon-box node-icon-green">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              </div>
-              <div class="node-content">
-                <div class="node-title">Sandbox Green Check</div>
-                <div class="node-desc" id="node3Desc">Repro verified passing &amp; zero test regressions</div>
-                <div class="node-badge badge-green" id="badgeGreen">PASSED TEST (GREEN)</div>
-              </div>
-            </div>
+              <!-- Connector 0 -> 1 -->
+              <div class="w-0.5 h-3 bg-gradient-to-b from-white/20 to-white/5 mx-auto -my-1"></div>
 
-            <!-- Connector 4 -> 5 -->
-            <div class="dag-connector-v"></div>
+              <!-- Node 1: Hermetic Sandbox Red Check -->
+              <div class="dag-node-item rounded-xl p-3.5 bg-slate-950/60 border border-white/10 transition-all" id="node-1">
+                <div class="flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="x-circle" class="w-4 h-4"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                      <h3 class="text-xs sm:text-sm font-semibold text-slate-200">Hermetic Sandbox Red Check</h3>
+                      <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-300 border border-rose-500/30" id="badgeRed">FAILING TEST (CONFIRMED 🔴)</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-0.5" id="node1Desc">Author repro test & confirm defect (Empirical Red)</p>
+                  </div>
+                </div>
+              </div>
 
-            <!-- Node 5: Human-in-the-Loop Approval Gate -->
-            <div class="dag-node dag-node-gated" id="node-4">
-              <div class="node-icon-box node-icon-gate">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
-              </div>
-              <div class="node-content">
-                <div class="node-title glow-text">Human-in-the-Loop Approval Gate</div>
-                <div class="node-desc">TrueForge Pause Barrier before irreversible PR creation</div>
-                <div class="node-badge badge-gate">APPROVAL BARRIER</div>
-              </div>
-            </div>
+              <!-- Connector 1 -> 2 -->
+              <div class="w-0.5 h-3 bg-gradient-to-b from-white/20 to-white/5 mx-auto -my-1"></div>
 
-            <!-- Connector 5 -> 6 -->
-            <div class="dag-connector-v"></div>
+              <!-- Node 2: Surgical AST Patch -->
+              <div class="dag-node-item rounded-xl p-3.5 bg-slate-950/60 border border-white/10 transition-all" id="node-2">
+                <div class="flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-violet-500/10 border border-violet-500/20 text-violet-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="code" class="w-4 h-4"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                      <h3 class="text-xs sm:text-sm font-semibold text-slate-200">Surgical AST Patch</h3>
+                      <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-300 border border-violet-500/30">AST SYMBOL FIX</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Serena symbol refactor & defensive boundary fix</p>
+                  </div>
+                </div>
+              </div>
 
-            <!-- Node 6: Upstream Deployment -->
-            <div class="dag-node" id="node-5">
-              <div class="node-icon-box node-icon-violet">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="18" cy="18" r="3"></circle>
-                  <circle cx="6" cy="6" r="3"></circle>
-                  <path d="M13 6h3a2 2 0 0 1 2 2v7"></path>
-                  <line x1="6" y1="9" x2="6" y2="21"></line>
-                </svg>
+              <!-- Connector 2 -> 3 -->
+              <div class="w-0.5 h-3 bg-gradient-to-b from-white/20 to-white/5 mx-auto -my-1"></div>
+
+              <!-- Node 3: Sandbox Green Check -->
+              <div class="dag-node-item rounded-xl p-3.5 bg-slate-950/60 border border-white/10 transition-all" id="node-3">
+                <div class="flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                      <h3 class="text-xs sm:text-sm font-semibold text-slate-200">Sandbox Green Check</h3>
+                      <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" id="badgeGreen">PASSED TEST (VERIFIED 🟢)</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-0.5" id="node3Desc">Repro verified passing & zero test regressions</p>
+                  </div>
+                </div>
               </div>
-              <div class="node-content">
-                <div class="node-title">Pull Request Deployment</div>
-                <div class="node-desc" id="node5Desc">Push verified branch &amp; create GitHub Pull Request</div>
-                <div class="node-badge badge-neutral" id="badgeDeployment">AWAITING TRIGGER</div>
+
+              <!-- Connector 3 -> 4 -->
+              <div class="w-0.5 h-3 bg-gradient-to-b from-white/20 to-white/5 mx-auto -my-1"></div>
+
+              <!-- Node 4: Human-in-the-Loop Approval Gate -->
+              <div class="dag-node-item rounded-xl p-3.5 bg-slate-950/80 border border-amber-500/30 transition-all relative overflow-hidden" id="node-4">
+                <div class="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-transparent pointer-events-none"></div>
+                <div class="flex items-start gap-3 relative z-10">
+                  <div class="w-9 h-9 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                      <h3 class="text-xs sm:text-sm font-semibold text-amber-300 flex items-center gap-1.5">
+                        <span>Human-in-the-Loop Approval Gate</span>
+                      </h3>
+                      <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">APPROVAL BARRIER</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-0.5">TrueForge Pause Barrier before irreversible PR creation</p>
+                  </div>
+                </div>
               </div>
+
+              <!-- Connector 4 -> 5 -->
+              <div class="w-0.5 h-3 bg-gradient-to-b from-white/20 to-white/5 mx-auto -my-1"></div>
+
+              <!-- Node 5: Pull Request Deployment -->
+              <div class="dag-node-item rounded-xl p-3.5 bg-slate-950/60 border border-white/10 transition-all" id="node-5">
+                <div class="flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                    <i data-lucide="git-pull-request" class="w-4 h-4"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                      <h3 class="text-xs sm:text-sm font-semibold text-slate-200">Pull Request Deployment</h3>
+                      <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-white/5" id="badgeDeployment">AWAITING TRIGGER</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-0.5" id="node5Desc">Push verified branch & create GitHub Pull Request</p>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
 
-        <!-- Right Pane: Monaco Diff & Developer Terminal -->
-        <section class="code-terminal-container">
-          <!-- Diff Inspection Card -->
-          <div class="code-diff-card">
-            <div class="pane-header">
-              <div class="file-tab">
-                <svg class="file-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14 2 14 8 20 8"></polyline>
-                </svg>
-                <span class="file-path font-mono" id="diffFilePath">src/config-parser.js</span>
-                <span class="diff-stat-pill" id="diffStatPill">+4 -1</span>
+        <!-- Right Pane: Monaco Unified Diff & Interactive Terminal (7 cols) -->
+        <section id="diffSection" class="lg:col-span-7 flex flex-col gap-5">
+          
+          <!-- Unified AST Code Diff Card -->
+          <div class="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40 flex flex-col">
+            <div class="flex items-center justify-between pb-3.5 mb-3 border-b border-white/10 flex-wrap gap-2">
+              <div class="flex items-center gap-2">
+                <i data-lucide="file-code" class="w-4 h-4 text-cyan-400"></i>
+                <span class="text-xs sm:text-sm font-mono font-semibold text-slate-200" id="diffFilePath">src/config-parser.js</span>
+                <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30" id="diffStatPill">+4 -1</span>
               </div>
-              <div class="pane-actions">
-                <span class="pane-tag">UNIFIED AST DIFF</span>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-semibold px-2 py-0.5 rounded bg-slate-800/80 border border-white/5">UNIFIED AST DIFF</span>
               </div>
             </div>
-            <div class="diff-editor-wrap">
-              <pre class="diff-monaco-view" id="diffView"><code><span class="diff-line diff-ctx">  export function parsePortConfig(rawPort) {</span>
-<span class="diff-line diff-del">-   const trimmed = rawPort.trim();</span>
-<span class="diff-line diff-add">+   if (rawPort === undefined || rawPort === null || (typeof rawPort === "string" && rawPort.trim() === "")) {</span>
-<span class="diff-line diff-add">+     return 3000;</span>
-<span class="diff-line diff-add">+   }</span>
-<span class="diff-line diff-add">+   const trimmed = typeof rawPort === "string" ? rawPort.trim() : String(rawPort);</span>
-<span class="diff-line diff-ctx">    const parsed = parseInt(trimmed, 10);</span></code></pre>
+
+            <!-- Monaco Diff Content Area -->
+            <div class="diff-viewer-wrapper bg-slate-950/90 rounded-xl border border-white/5 p-3.5 font-mono text-xs overflow-x-auto min-h-[160px] max-h-[300px] scrollbar-thin">
+              <div id="diffView" class="leading-relaxed">
+                <div class="text-slate-500 italic py-6 text-center flex flex-col items-center justify-center gap-2">
+                  <i data-lucide="git-pull-request" class="w-6 h-6 text-slate-600"></i>
+                  <span>Awaiting execution cycle to generate surgical AST patch diff...</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Developer Sandbox Terminal Card -->
-          <div class="terminal-pane-card">
-            <div class="pane-header terminal-header">
-              <div class="terminal-tab-group">
-                <button class="tab-item active" data-filter="all">All Logs</button>
-                <button class="tab-item" data-filter="reasoning">Reasoning</button>
-                <button class="tab-item" data-filter="sandbox">Sandbox</button>
-                <button class="tab-item" data-filter="gate">Pause Gate</button>
+          <!-- Interactive Developer Terminal Card -->
+          <div class="bg-slate-950/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40 flex flex-col">
+            <div class="flex items-center justify-between pb-3 mb-3 border-b border-white/10 flex-wrap gap-2">
+              
+              <!-- Category Tabs -->
+              <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-white/5 text-[11px] font-medium overflow-x-auto">
+                <button class="terminal-tab active px-2.5 py-1 rounded-lg bg-violet-600 text-white transition-all" data-filter="all">All Logs</button>
+                <button class="terminal-tab px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition-all" data-filter="reasoning">Reasoning</button>
+                <button class="terminal-tab px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition-all" data-filter="sandbox">Sandbox</button>
+                <button class="terminal-tab px-2.5 py-1 rounded-lg text-slate-400 hover:text-white transition-all" data-filter="gate">Pause Gate</button>
               </div>
-              <div class="terminal-meta">
-                <button class="term-tool-btn" id="copyLogsBtn" title="Copy Terminal Logs">Copy</button>
-                <button class="term-tool-btn" id="clearLogsBtn" title="Clear Output">Clear</button>
-                <span class="term-status-pill">HERMETIC SANDBOX</span>
-                <span class="term-timer font-mono" id="termTimer">00:00</span>
+
+              <!-- Terminal Controls & Timer -->
+              <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1.5 text-[11px] font-mono px-2 py-1 rounded-lg bg-slate-900 border border-white/5 text-slate-400">
+                  <i data-lucide="clock" class="w-3 h-3 text-cyan-400"></i>
+                  <span id="termTimer">00:00</span>
+                </div>
+                <button id="copyLogsBtn" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-all text-xs" title="Copy terminal logs">
+                  <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                </button>
+                <button id="clearLogsBtn" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition-all text-xs" title="Clear terminal">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
               </div>
             </div>
-            <div class="terminal-screen" id="terminalOutput">
-              <div class="t-line t-dim">// ContribForge v1.0.0 — Autonomous Developer Agent initialized.</div>
-              <div class="t-line t-dim">// Select an issue preset above or paste any GitHub issue URL to begin.</div>
+
+            <!-- Terminal Output Stream Box -->
+            <div id="terminalOutput" class="bg-black/60 rounded-xl border border-white/5 p-3.5 font-mono text-xs text-slate-300 min-h-[220px] max-h-[340px] overflow-y-auto space-y-1.5 scrollbar-thin">
+              <div class="text-slate-500 font-mono text-xs">> ContribForge Developer Terminal ready.</div>
+              <div class="text-slate-500 font-mono text-xs">> Select an issue or paste a GitHub URL to start the autonomous cycle.</div>
             </div>
           </div>
+
         </section>
-      </main>
+
+      </div>
+    </main>
+
+    <!-- Floating Pull Request Success Toast (Hidden initially) -->
+    <div id="prSuccessBar" class="hidden fixed bottom-5 right-5 z-50 max-w-md w-full bg-slate-950/95 border border-emerald-500/40 rounded-2xl p-4 shadow-2xl shadow-emerald-500/20 backdrop-blur-xl animate-bounce-subtle">
+      <div class="flex items-start gap-3">
+        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <h4 class="text-xs sm:text-sm font-bold text-white">Pull Request Successfully Created!</h4>
+          <p class="text-xs text-slate-400 mt-0.5">Empirically verified passing with 0 test suite regressions.</p>
+          <a id="prSuccessLink" href="#" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-emerald-300 font-semibold mt-2 underline underline-offset-2">
+            <span>View Pull Request on GitHub</span>
+            <i data-lucide="external-link" class="w-3 h-3"></i>
+          </a>
+        </div>
+        <button id="closeSuccessBtn" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- The TrueForge PAUSE Gate Modal (Human-in-the-Loop Checkpoint) -->
-    <div class="modal-backdrop hidden" id="approvalModal">
-      <div class="modal-box">
-        <div class="modal-glow-border"></div>
-        <div class="modal-inner">
-          <div class="modal-top">
-            <div class="modal-shield-badge">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              </svg>
-            </div>
-            <div class="modal-title-wrap">
-              <div class="modal-pretitle">HUMAN-IN-THE-LOOP CHECKPOINT</div>
-              <h2 class="modal-heading">Execution Paused for Irreversible Action</h2>
+    <!-- Human-in-the-Loop (HITL) Modal -->
+    <div id="approvalModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div class="w-full max-w-xl bg-slate-950/95 border border-amber-500/40 rounded-2xl p-5 sm:p-6 shadow-2xl shadow-amber-500/10 flex flex-col gap-4 animate-scale-in">
+        
+        <div class="flex items-center gap-3 pb-3 border-b border-white/10">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+            <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-amber-400 font-bold">TRUEFORGE PAUSE BARRIER</span>
+            <h3 class="text-base sm:text-lg font-bold text-white">Authorize Irreversible PR Creation?</h3>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-300">
+          ContribForge has empirically reproduced the defect and verified the patch with 0 regressions. Execution is paused before modifying upstream GitHub state.
+        </p>
+
+        <!-- PR Details Preview Capsule -->
+        <div class="bg-slate-900/90 rounded-xl p-3.5 border border-white/5 space-y-2 text-xs font-mono">
+          <div class="flex justify-between">
+            <span class="text-slate-500">Repository:</span>
+            <span class="text-slate-200 font-semibold" id="modalTarget">truefoundry/micro-config</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-slate-500">Branch:</span>
+            <span class="text-cyan-400" id="modalBranch">fix/issue-14-empty-port</span>
+          </div>
+          <div>
+            <span class="text-slate-500 block mb-1">Title:</span>
+            <span class="text-slate-200 font-semibold" id="modalPrTitle">fix(config): default port to 3000</span>
+          </div>
+          <div>
+            <span class="text-slate-500 block mb-1">Description:</span>
+            <div class="text-[11px] text-slate-400 bg-black/40 p-2.5 rounded-lg max-h-24 overflow-y-auto" id="modalPrBody">
+              Resolves PORT TypeError crash...
             </div>
           </div>
+        </div>
 
-          <div class="modal-card-content">
-            <div class="meta-row">
-              <div class="meta-block">
-                <span class="meta-label">Action</span>
-                <span class="meta-value font-mono">submit_pull_request</span>
-              </div>
-              <div class="meta-block">
-                <span class="meta-label">Target Repository</span>
-                <span class="meta-value font-mono" id="modalTarget">truefoundry/micro-config</span>
-              </div>
-              <div class="meta-block">
-                <span class="meta-label">Branch</span>
-                <span class="meta-value font-mono" id="modalBranch">fix/issue-14-empty-port</span>
-              </div>
+        <!-- Decision Action Buttons -->
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <button id="denyBtn" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-all">
+            Deny & Cancel
+          </button>
+          <button id="approveBtn" class="px-5 py-2 text-xs font-semibold rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-600/30 flex items-center gap-1.5 transition-all">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Authorize & Open Pull Request</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Settings Modal: API Keys & Reasoning Engine -->
+    <div id="settingsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div class="w-full max-w-lg bg-slate-950/95 border border-white/10 rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col gap-4 animate-scale-in">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-violet-500/20 text-violet-400 flex items-center justify-center">
+              <i data-lucide="settings" class="w-4 h-4"></i>
             </div>
-
-            <div class="sandbox-proof-box">
-              <div class="proof-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                <span>VERIFIED BY HERMETIC SANDBOX</span>
-              </div>
-              <div class="proof-desc">
-                Reproduction test failed on clean source (Red), verified passing with patch (Green), and passed 100% of existing unit tests with zero regressions.
-              </div>
-            </div>
-
-            <div class="pr-preview-container">
-              <div class="pr-title-heading" id="modalPrTitle">fix(config): default port to 3000 when PORT is unset (resolves #14)</div>
-              <div class="pr-body-text" id="modalPrBody">
-                Resolves #14: Added defensive guard for undefined, null, and empty string in parsePortConfig.
-              </div>
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-white">Agent Configuration</h3>
+              <p class="text-[11px] text-slate-400">Configure AI Reasoning Model & GitHub Credentials</p>
             </div>
           </div>
+          <button id="closeSettingsBtn" class="text-slate-400 hover:text-white p-1">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
 
-          <div class="modal-actions-bar">
-            <button id="denyBtn" class="btn-cancel">
-              <span>Reject &amp; Discard</span>
+        <!-- Google Gemini Key -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <label for="geminiKeyInput" class="font-semibold text-slate-200">Google Gemini API Key</label>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400" id="geminiStatusBadge">Offline (Heuristic Mode)</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Enables Gemini 2.5 Flash. Google AI Studio keys start with <code class="text-violet-300">AIzaSy...</code>. If empty, the deterministic heuristic AST engine solves issues offline.</p>
+          <div class="relative flex items-center">
+            <input 
+              type="password" 
+              id="geminiKeyInput" 
+              placeholder="AIzaSy... (stored locally)" 
+              class="w-full py-2 pl-3 pr-10 text-xs bg-slate-900 rounded-xl border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 font-mono"
+            />
+            <button type="button" id="toggleGeminiVis" class="absolute right-3 text-slate-400 hover:text-white">
+              <i data-lucide="eye" class="w-4 h-4"></i>
             </button>
-            <button id="approveBtn" class="btn-allow">
-              <span class="btn-allow-glow"></span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>Allow &amp; Create Pull Request</span>
-              <kbd class="kbd-modal">⌘↵</kbd>
+          </div>
+        </div>
+
+        <!-- GitHub Personal Access Token -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <label for="githubTokenInput" class="font-semibold text-slate-200">GitHub Personal Access Token (Optional)</label>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-slate-800 text-slate-400" id="githubStatusBadge">Public / Staged PR</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Enables live Pull Request creation on GitHub and elevated rate limits.</p>
+          <div class="relative flex items-center">
+            <input 
+              type="password" 
+              id="githubTokenInput" 
+              placeholder="ghp_... or github_pat_..." 
+              class="w-full py-2 pl-3 pr-10 text-xs bg-slate-900 rounded-xl border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 font-mono"
+            />
+            <button type="button" id="toggleGithubVis" class="absolute right-3 text-slate-400 hover:text-white">
+              <i data-lucide="eye" class="w-4 h-4"></i>
             </button>
+          </div>
+        </div>
+
+        <!-- Model Selection -->
+        <div class="space-y-1.5">
+          <label for="modelSelect" class="text-xs font-semibold text-slate-200">Reasoning Engine</label>
+          <select id="modelSelect" class="w-full py-2 px-3 text-xs bg-slate-900 rounded-xl border border-white/10 text-white focus:outline-none focus:border-violet-500">
+            <option value="gemini-2.5-flash" selected>Google Gemini 2.5 Flash (Fastest & Multimodal)</option>
+            <option value="gemini-1.5-pro">Google Gemini 1.5 Pro (Deep Code Reasoning)</option>
+            <option value="heuristic">Autonomous Heuristic Symbolic Solver (No Key Needed)</option>
+          </select>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
+          <button id="saveSettingsBtn" class="px-5 py-2 text-xs font-semibold rounded-xl bg-violet-600 hover:bg-violet-500 text-white shadow-md shadow-violet-600/30 flex items-center gap-1.5 transition-all">
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            <span>Save Configuration</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Help / Architecture Modal -->
+    <div id="helpModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div class="w-full max-w-xl bg-slate-950/95 border border-white/10 rounded-2xl p-5 sm:p-6 shadow-2xl flex flex-col gap-4 animate-scale-in">
+        <div class="flex items-center justify-between pb-3 border-b border-white/10">
+          <div class="flex items-center gap-2">
+            <i data-lucide="info" class="w-5 h-5 text-cyan-400"></i>
+            <h3 class="text-sm sm:text-base font-bold text-white">ContribForge System Architecture</h3>
+          </div>
+          <button id="closeHelpBtn" class="text-slate-400 hover:text-white p-1">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="space-y-3 text-xs text-slate-300">
+          <div class="p-3 rounded-xl bg-slate-900 border border-white/5">
+            <span class="font-bold text-cyan-400 block mb-1">1. Test-Driven Agentics (TDA)</span>
+            ContribForge guarantees that any defect is confirmed with an empirical failing reproduction test (Red Check) before authoring the surgical AST patch. It then re-tests reproduction (Green Check) and executes the full test suite to guarantee 0 regressions.
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900 border border-white/5">
+            <span class="font-bold text-amber-400 block mb-1">2. TrueForge Pause Barrier (HITL Gate)</span>
+            Before making any irreversible change (pushing commits or opening a public Pull Request), execution pauses at an approval barrier, allowing human inspection of the AST diff.
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900 border border-white/5">
+            <span class="font-bold text-emerald-400 block mb-1">3. Hermetic Sandboxing</span>
+            All tests and code modifications run inside isolated sandbox workspaces with path containment checks, preventing accidental changes to production code.
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Settings Modal: API Keys & Model Configuration -->
-    <div class="modal-backdrop hidden" id="settingsModal">
-      <div class="modal-box modal-box-settings">
-        <div class="modal-glow-border"></div>
-        <div class="modal-inner">
-          <div class="modal-top">
-            <div class="modal-shield-badge modal-gear-badge">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-              </svg>
-            </div>
-            <div class="modal-title-wrap">
-              <div class="modal-pretitle">AGENT ENGINE CONFIGURATION</div>
-              <h2 class="modal-heading">Model &amp; API Key Settings</h2>
-            </div>
-          </div>
-
-          <div class="modal-card-content">
-            <div class="setting-field-group">
-              <div class="setting-label-row">
-                <label for="geminiKeyInput">Google Gemini API Key</label>
-                <span class="setting-badge" id="geminiStatusBadge">Offline (Heuristic Mode)</span>
-              </div>
-              <p class="setting-hint">Enables autonomous LLM reasoning via Google Gemini 2.5 Flash. If blank, ContribForge automatically uses its deterministic heuristic AST engine.</p>
-              <div class="input-with-action">
-                <input type="password" id="geminiKeyInput" placeholder="AIzaSy... (persisted locally)" />
-                <button type="button" class="toggle-vis-btn" id="toggleGeminiVis" title="Show/Hide">👁</button>
-              </div>
-            </div>
-
-            <div class="setting-field-group">
-              <div class="setting-label-row">
-                <label for="githubTokenInput">GitHub Personal Access Token (Optional)</label>
-                <span class="setting-badge" id="githubStatusBadge">Public / Anonymous</span>
-              </div>
-              <p class="setting-hint">Enables live Pull Request creation and higher rate limits on public &amp; private repositories.</p>
-              <div class="input-with-action">
-                <input type="password" id="githubTokenInput" placeholder="ghp_... or github_pat_..." />
-                <button type="button" class="toggle-vis-btn" id="toggleGithubVis" title="Show/Hide">👁</button>
-              </div>
-            </div>
-
-            <div class="setting-field-group">
-              <div class="setting-label-row">
-                <label for="modelSelect">Autonomous Reasoning Engine</label>
-              </div>
-              <select id="modelSelect" class="setting-select">
-                <option value="gemini-2.5-flash" selected>Google Gemini 2.5 Flash (Fastest &amp; Multimodal)</option>
-                <option value="gemini-1.5-pro">Google Gemini 1.5 Pro (Deep Code Analysis)</option>
-                <option value="gpt-4o">OpenAI GPT-4o (Compatible)</option>
-                <option value="heuristic">Autonomous Heuristic Symbolic Solver (No Key Needed)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="modal-actions-bar">
-            <button id="closeSettingsBtn" class="btn-cancel">
-              <span>Close</span>
-            </button>
-            <button id="saveSettingsBtn" class="btn-allow">
-              <span class="btn-allow-glow"></span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>Save Configuration</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Help Modal: Hackathon Architecture Guide -->
-    <div class="modal-backdrop hidden" id="helpModal">
-      <div class="modal-box modal-box-settings">
-        <div class="modal-glow-border"></div>
-        <div class="modal-inner">
-          <div class="modal-top">
-            <div class="modal-shield-badge">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-              </svg>
-            </div>
-            <div class="modal-title-wrap">
-              <div class="modal-pretitle">TRUEFOUNDRY × POLARIS HACKATHON</div>
-              <h2 class="modal-heading">ContribForge Architecture Guide</h2>
-            </div>
-          </div>
-
-          <div class="modal-card-content">
-            <div class="help-section">
-              <h4>1. What makes ContribForge unique?</h4>
-              <p>Unlike conversational assistants that suggest unverified snippets, ContribForge is an <strong>agent that acts</strong>. It isolates code execution in a hermetic sandbox, authors empirical reproduction tests, verifies defect failure (Red), synthesizes surgical patches (Green), and halts at the TrueForge Pause Gate before opening a Pull Request.</p>
-            </div>
-            <div class="help-section">
-              <h4>2. How to run any GitHub issue?</h4>
-              <p>Paste any public GitHub Issue URL into the top search bar (e.g. <code>https://github.com/expressjs/express/issues/5300</code>) and click <strong>Load</strong>, then click <strong>Solve Issue &amp; Open PR</strong>.</p>
-            </div>
-            <div class="help-section">
-              <h4>3. Keyboard Shortcuts</h4>
-              <p><code>⌘R</code> / <code>Ctrl+R</code>: Trigger agent workflow &bull; <code>⌘↵</code> / <code>Ctrl+Enter</code>: Approve Pull Request &bull; <code>Esc</code>: Close modal / deny.</p>
-            </div>
-          </div>
-
-          <div class="modal-actions-bar">
-            <button id="closeHelpBtn" class="btn-allow">
-              <span>Got it!</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Live Toast Success Banner -->
-    <div class="live-toast hidden" id="prSuccessBar">
-      <div class="toast-indicator">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-      </div>
-      <div class="toast-body">
-        <h4>Pull Request Successfully Opened!</h4>
-        <p id="prSuccessMessage"><a href="#" id="prSuccessLink" target="_blank">View on GitHub →</a></p>
-      </div>
-      <button class="toast-close-btn" id="closeSuccessBtn">✕</button>
-    </div>
   </div>
 
+  <!-- Dashboard Client Logic Script -->
   <script src="app.js"></script>
 </body>
 </html>
