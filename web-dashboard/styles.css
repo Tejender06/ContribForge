@@ -220,11 +220,12 @@ body.theme-dark {
   display: flex;
   align-items: center;
   flex: 1;
-  max-width: 440px;
+  max-width: 420px;
+  min-width: 220px;
   background: var(--bg-deep);
   border: 1px solid var(--border-subtle);
   border-radius: 8px;
-  padding: 0.15rem 0.25rem 0.15rem 2rem;
+  padding: 0.2rem 0.35rem 0.2rem 2.1rem;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -236,10 +237,11 @@ body.theme-dark {
 .gh-search-icon {
   position: absolute;
   left: 0.65rem;
-  width: 14px;
-  height: 14px;
+  width: 14px !important;
+  height: 14px !important;
   color: var(--text-muted);
   pointer-events: none;
+  flex-shrink: 0;
 }
 
 #issueUrlInput {
@@ -247,9 +249,10 @@ body.theme-dark {
   background: transparent;
   border: none;
   color: var(--text-primary);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-family: var(--font-sans);
   outline: none;
+  padding: 0.2rem 0.4rem;
 }
 
 .input-inline-btn {
@@ -683,6 +686,34 @@ body.theme-dark {
   gap: 0.5rem;
   font-size: 0.78rem;
   color: var(--text-primary);
+}
+
+.file-icon {
+  width: 15px !important;
+  height: 15px !important;
+  max-width: 15px !important;
+  max-height: 15px !important;
+  color: var(--accent-cyan);
+  flex-shrink: 0;
+}
+
+/* Custom Sleek Dark Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .git-status-dot {
