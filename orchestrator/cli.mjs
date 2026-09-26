@@ -81,14 +81,17 @@ async function main() {
     }
   });
 
-  console.log(`${colors.cyan}Target: Issue #14 in demo-target-repo (micro-config)${colors.reset}`);
+  const issueArg = process.argv.slice(2).find((arg) => !arg.startsWith("-") && !isNaN(Number(arg)));
+  const issueNumber = issueArg ? Number(issueArg) : 14;
+
+  console.log(`${colors.cyan}Target: Issue #${issueNumber} in demo-target-repo (micro-config)${colors.reset}`);
   console.log(`${colors.cyan}Starting Autonomous Test-Driven Resolution Loop...\n${colors.reset}`);
 
   try {
     await engine.runWorkflow({
       owner: "truefoundry",
       repo: "micro-config",
-      issueNumber: 14
+      issueNumber
     });
     console.log(`\n${colors.green}${colors.bright}🎉 Mission Complete! Pull Request is ready for review.${colors.reset}\n`);
   } catch (err) {

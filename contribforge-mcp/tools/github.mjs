@@ -33,13 +33,31 @@ Should default to port \`3000\` when \`PORT\` is unset, null, or empty string.`,
         body: "Confirmed bug on main. The parser assumes \`rawPort\` is always a non-empty string. We need a unit test covering empty string, null, and non-numeric strings before merging any PR."
       }
     ]
+  },
+  12: {
+    number: 12,
+    title: "parseHost does not strip leading 'http://' or 'https://' protocol prefixes",
+    author: "sre-dan",
+    state: "open",
+    labels: ["bug", "networking"],
+    body: `### Description
+When \`HOST\` is specified with a scheme prefix like \`http://0.0.0.0\` or \`https://127.0.0.1\`, \`parseHost\` preserves the scheme, which causes socket binding errors in Node.js HTTP servers.
+
+### Expected Behavior
+\`parseHost('http://localhost')\` should return \`'localhost'\`.`,
+    comments: [
+      {
+        author: "lead-dev",
+        body: "Good catch. Let's add regex cleaning to strip schemes before trimming."
+      }
+    ]
   }
 };
 
 export async function fetchGitHubIssue(owner, repo, issueNumber) {
   const token = process.env.GITHUB_TOKEN;
 
-  if (token && token.startsWith("ghp_")) {
+  if (token && (token.startsWith("ghp_") || token.startsWith("github_pat_"))) {
     try {
       const octokit = new Octokit({ auth: token });
       const { data: issue } = await octokit.rest.issues.get({
@@ -79,7 +97,7 @@ export async function fetchGitHubIssue(owner, repo, issueNumber) {
     author: "demo-user",
     state: "open",
     labels: ["bug"],
-    body: "Please check repository test suite and reproduce bug.",
+    body: `Issue #${issueNumber}: Automated bug report. Investigate edge cases in configuration parser and verify unit tests.`,
     comments: []
   };
 

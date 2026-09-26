@@ -66,9 +66,9 @@
       <header class="app-topbar">
         <div class="topbar-left">
           <span class="back-link">←</span>
-          <span class="project-title">Autonomous AI developer agent dashboard</span>
+          <span class="project-title">Autonomous AI Developer Agent</span>
           <span class="separator">/</span>
-          <span class="repo-badge">truefoundry / micro-config &gt; Issue #14</span>
+          <span class="repo-badge" id="topbarRepoBadge">truefoundry / micro-config &gt; Issue #14</span>
         </div>
 
         <div class="topbar-search">
@@ -81,6 +81,15 @@
         </div>
 
         <div class="topbar-right">
+          <div class="issue-selector-capsule">
+            <span class="issue-selector-icon">🎯</span>
+            <label for="issueSelect" class="selector-label">Target Bug:</label>
+            <select id="issueSelect" class="issue-dropdown">
+              <option value="14" selected>#14: Port TypeError (Crash)</option>
+              <option value="12">#12: Scheme Prefix in parseHost</option>
+            </select>
+          </div>
+
           <div class="telemetry-capsule">
             <span class="tele-item"><span class="dot-cpu"></span> CPU: 1.2 vCPU</span>
             <span class="tele-divider">|</span>
@@ -92,7 +101,7 @@
             <svg class="btn-play-icon" viewBox="0 0 24 24" fill="currentColor">
               <polygon points="5 3 19 12 5 21 5 3"></polygon>
             </svg>
-            <span>Run Issue #14 Demo</span>
+            <span id="runBtnText">Run Issue #14 Demo</span>
             <kbd class="kbd-btn">⌘R</kbd>
           </button>
         </div>
@@ -126,7 +135,7 @@
               </div>
               <div class="node-content">
                 <div class="node-title">Issue Ingestion</div>
-                <div class="node-desc">Fetch issue #14 details &amp; stack trace</div>
+                <div class="node-desc" id="node0Desc">Fetch issue #14 details &amp; stack trace</div>
                 <div class="node-badge badge-neutral">INITIAL RECON</div>
               </div>
             </div>

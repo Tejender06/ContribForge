@@ -25,6 +25,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const prSuccessLink = document.getElementById("prSuccessLink");
   const closeSuccessBtn = document.getElementById("closeSuccessBtn");
 
+  // Issue selector & topbar
+  const issueSelect = document.getElementById("issueSelect");
+  const topbarRepoBadge = document.getElementById("topbarRepoBadge");
+  const runBtnText = document.getElementById("runBtnText");
+  const node0Desc = document.getElementById("node0Desc");
+
+  if (issueSelect) {
+    issueSelect.addEventListener("change", () => {
+      const val = issueSelect.value;
+      if (topbarRepoBadge) topbarRepoBadge.textContent = `truefoundry / micro-config > Issue #${val}`;
+      if (runBtnText) runBtnText.textContent = `Run Issue #${val} Demo`;
+      if (node0Desc) {
+        node0Desc.textContent = val === "12"
+          ? "Fetch issue #12 details & stack trace (parseHost scheme)"
+          : "Fetch issue #14 details & stack trace (PORT crash)";
+      }
+    });
+  }
+
   let timerInterval = null;
   let startTime = null;
 
@@ -170,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(timerInterval);
 
         setNodeActive(5);
-        badgeDeployment.textContent = "PR #503 OPENED ✔";
+        badgeDeployment.textContent = `PR #${data.result?.pr_number || 503} OPENED ✔`;
         badgeDeployment.className = "node-badge badge-green";
 
         const { result } = data;
@@ -206,13 +225,14 @@ document.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
     setNodeActive(0);
 
-    appendTerminal("Initiating Test-Driven Agentics (TDA) resolution loop for Issue #14...", "t-info");
+    const issueNumber = issueSelect ? Number(issueSelect.value) || 14 : 14;
+    appendTerminal(`Initiating Test-Driven Agentics (TDA) resolution loop for Issue #${issueNumber}...`, "t-info");
 
     try {
       const res = await fetch("/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ owner: "truefoundry", repo: "micro-config", issueNumber: 14 })
+        body: JSON.stringify({ owner: "truefoundry", repo: "micro-config", issueNumber })
       });
       if (!res.ok) {
         throw new Error((await res.json()).error || "Failed to start workflow");

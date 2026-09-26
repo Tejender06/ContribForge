@@ -61,24 +61,30 @@ npm start
 Open your browser to: **[http://localhost:4000](http://localhost:4000)**
 
 ### 3. Run the Demo
-1. Click **"Run Issue #14 Demo"** on the dashboard.
-2. Watch the live pipeline:
+1. Choose an issue from the **Target Bug** selector in the top bar:
+   - **Issue #14:** `PORT` null/empty string crash (`TypeError: Cannot read properties of undefined`).
+   - **Issue #12:** `parseHost` scheme prefix (`http://` or `https://` socket binding error).
+2. Click **"Run Issue Demo"** (or press `⌘R` / `Ctrl+R`).
+3. Watch the live pipeline:
    - **Step 1:** Sandbox initialization & isolation.
-   - **Step 2:** GitHub Issue #14 context extraction.
+   - **Step 2:** GitHub Issue context extraction.
    - **Step 3:** Minimal reproduction authored & failed in sandbox (**🔴 Red Check**).
-   - **Step 4:** Surgical defensive patch applied to `src/config-parser.js`.
-   - **Step 5:** Repro passed (**🟢 Green Check**) & 5/5 regression unit tests pass.
+   - **Step 4:** Surgical defensive patch applied via AST symbol manipulation.
+   - **Step 5:** Repro passed (**🟢 Green Check**) & 100% of regression unit tests pass.
    - **Step 6:** **🛡️ PAUSE GATE ACTIVATED:** The TrueForge approval modal slides down with the full diff and test summary.
-   - **Step 7:** Click **"Allow & Create Pull Request"** to trigger the irreversible submission.
+   - **Step 7:** Click **"Allow & Create Pull Request"** (or press `⌘↵` / `Ctrl+Enter`) to trigger the irreversible submission.
 
 ### 4. Running via Terminal CLI
 If you prefer a terminal-based workflow:
 ```bash
-npm run cli
+# Run interactive CLI on Issue #14 or Issue #12
+npm run cli -- 14
+npm run cli -- 12
 ```
 Or for automated benchmarking:
 ```bash
-npm run cli:auto
+npm run cli:auto -- 14
+npm run cli:auto -- 12
 ```
 
 ---
