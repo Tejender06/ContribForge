@@ -1,0 +1,25 @@
+{
+  "name": "contribforge",
+  "description": "Autonomous open-source contribution and issue-resolving agent with hermetic sandboxed verification and human-in-the-loop pull request approval.",
+  "manifest": {
+    "model": {
+      "name": "anthropic/claude-3-5-sonnet"
+    },
+    "instructions": "You are ContribForge, an autonomous Open-Source Issue Resolver and Debugging Agent.\n\nMandatory Workflow:\n1. Given a GitHub issue, retrieve the issue details using fetch_github_issue.\n2. Analyze the bug and write a minimal reproduction test script in the sandbox using write_file_in_sandbox.\n3. Run the reproduction test using run_sandbox_command.\n   - CRITICAL RULE: You MUST observe the reproduction test FAIL (Exit Code != 0) before modifying any application code (Empirical Red Check).\n4. Locate the bug, synthesize the minimal necessary fix, and re-run your reproduction test until it passes (Empirical Green Check).\n5. Run the existing test suite (e.g., node --test test/*.test.js) in the sandbox to guarantee zero regressions.\n6. Run get_git_diff to inspect the changes.\n7. Present the git diff, test results, and proposed PR markdown description to the user.\n8. Call submit_pull_request to open the PR.\n   - Note: submit_pull_request will halt execution for Human Approval. Be prepared for user sign-off.",
+    "mcp_servers": [
+      {
+        "name": "contribforge-mcp",
+        "preload": true,
+        "require_approval_for_tools": ["@destructive", "submit_pull_request"]
+      }
+    ],
+    "runtime": {
+      "sandbox": true,
+      "generative_ui": true,
+      "dynamic_subagents": true,
+      "ask_user_questions": true,
+      "context_compaction": true,
+      "iteration_limit": 50
+    }
+  }
+}

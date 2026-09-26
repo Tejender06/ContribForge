@@ -1,0 +1,9 @@
+{
+  "id": 14,
+  "title": "TypeError: Cannot read properties of undefined (reading 'trim') in parsePortConfig",
+  "author": "contributor-jane",
+  "state": "open",
+  "labels": ["bug", "good first issue", "help wanted"],
+  "body": "When running our service in environments where PORT is unset or empty string, config parser crashes on startup with an unhandled TypeError: Cannot read properties of undefined (reading 'trim'). Expected behavior: default to port 3000.",
+  "expected": "Default to 3000 when PORT is undefined, null, or empty string."
+}

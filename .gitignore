@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Local / IDE tools & State
+.serena/
+.serena
+.env
+
+# Sandboxes & Test Artefacts
+sandbox_workspace/
+staged_pull_requests/
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,26 @@
+{
+  "name": "contribforge",
+  "version": "1.0.0",
+  "description": "ContribForge — Autonomous Open-Source Contribution & Debugging Agent built for TrueFoundry × Polaris Hackathon",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node orchestrator/server.mjs",
+    "dashboard": "node orchestrator/server.mjs",
+    "cli": "node orchestrator/cli.mjs",
+    "cli:auto": "node orchestrator/cli.mjs --auto-approve",
+    "mcp": "node contribforge-mcp/server.mjs",
+    "test:demo-repo": "npm --prefix demo-target-repo test",
+    "trueforge": "npx -y @truefoundry/trueforge@latest"
+  },
+  "keywords": [
+    "truefoundry",
+    "trueforge",
+    "ai-agent",
+    "mcp",
+    "hackathon",
+    "open-source"
+  ],
+  "author": "B S Tejender Singh",
+  "license": "MIT"
+}

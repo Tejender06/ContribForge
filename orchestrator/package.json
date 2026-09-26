@@ -1,0 +1,17 @@
+{
+  "name": "contribforge-orchestrator",
+  "version": "1.0.0",
+  "description": "ContribForge agent execution engine and real-time dashboard server",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs",
+    "cli": "node cli.mjs",
+    "demo": "node cli.mjs --demo"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "ws": "^8.18.0"
+  }
+}

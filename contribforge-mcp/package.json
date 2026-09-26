@@ -1,0 +1,16 @@
+{
+  "name": "contribforge-mcp",
+  "version": "1.0.0",
+  "description": "Model Context Protocol (MCP) server for ContribForge autonomous open-source agent",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "@octokit/rest": "^20.0.0",
+    "dotenv": "^16.4.5",
+    "simple-git": "^3.25.0"
+  }
+}

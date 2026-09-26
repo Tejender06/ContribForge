@@ -1,0 +1,11 @@
+{
+  "name": "micro-config",
+  "version": "1.2.0",
+  "description": "Zero-dependency microservice configuration loader",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": ["config", "microservice", "env"]
+}
