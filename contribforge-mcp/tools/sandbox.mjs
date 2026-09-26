@@ -4,17 +4,38 @@ import path from "path";
 
 const SANDBOX_DIR = path.resolve(process.env.SANDBOX_DIR || "../sandbox_workspace");
 
-export function initSandbox(sourceRepoDir = null) {
+export function initSandbox(source = null) {
   if (!fs.existsSync(SANDBOX_DIR)) {
     fs.mkdirSync(SANDBOX_DIR, { recursive: true });
   }
 
-  // If sourceRepoDir is provided and sandbox is empty, copy initial files
-  if (sourceRepoDir && fs.existsSync(sourceRepoDir)) {
-    const files = fs.readdirSync(SANDBOX_DIR);
-    if (files.length === 0 || (files.length === 1 && files[0] === ".git")) {
-      copyRecursiveSync(sourceRepoDir, SANDBOX_DIR);
+  if (source) {
+    const isUrl = typeof source === "string" && (source.startsWith("http://") || source.startsWith("https://") || source.startsWith("git@"));
+    if (isUrl) {
+      try {
+        const files = fs.readdirSync(SANDBOX_DIR);
+        if (files.length === 0 || (files.length === 1 && files[0] === ".git")) {
+          execSync(`git clone --depth 1 ${source} .`, { cwd: SANDBOX_DIR, timeout: 60000, stdio: "ignore" });
+        }
+      } catch (err) {
+        console.warn(`[Sandbox Git Clone Warning] Could not clone ${source}: ${err.message}`);
+      }
+    } else if (fs.existsSync(source)) {
+      const files = fs.readdirSync(SANDBOX_DIR);
+      if (files.length === 0 || (files.length === 1 && files[0] === ".git")) {
+        copyRecursiveSync(source, SANDBOX_DIR);
+      }
     }
+  }
+
+  // Ensure git repo initialized in sandbox so git diff works
+  if (!fs.existsSync(path.join(SANDBOX_DIR, ".git"))) {
+    try {
+      execSync("git init && git config user.name 'ContribForge Agent' && git config user.email 'agent@contribforge.dev'", {
+        cwd: SANDBOX_DIR,
+        stdio: "ignore"
+      });
+    } catch {}
   }
 
   return SANDBOX_DIR;

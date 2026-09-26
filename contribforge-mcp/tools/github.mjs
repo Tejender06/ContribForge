@@ -54,10 +54,25 @@ When \`HOST\` is specified with a scheme prefix like \`http://0.0.0.0\` or \`htt
   }
 };
 
-export async function fetchGitHubIssue(owner, repo, issueNumber) {
-  const token = process.env.GITHUB_TOKEN;
+export function parseGitHubUrl(url) {
+  if (!url || typeof url !== "string") return null;
+  const trimmed = url.trim();
+  const match = trimmed.match(/(?:https?:\/\/github\.com\/)?([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)(?:\/issues\/|#)([0-9]+)/);
+  if (match) {
+    return {
+      owner: match[1],
+      repo: match[2],
+      issueNumber: parseInt(match[3], 10)
+    };
+  }
+  return null;
+}
 
-  if (token && (token.startsWith("ghp_") || token.startsWith("github_pat_"))) {
+export async function fetchGitHubIssue(owner, repo, issueNumber, customToken = null) {
+  const token = customToken || process.env.GITHUB_TOKEN;
+
+  // 1. Try authenticated Octokit if token is available
+  if (token && (token.startsWith("ghp_") || token.startsWith("github_pat_") || token.length > 20)) {
     try {
       const octokit = new Octokit({ auth: token });
       const { data: issue } = await octokit.rest.issues.get({
@@ -73,31 +88,94 @@ export async function fetchGitHubIssue(owner, repo, issueNumber) {
       });
 
       return {
-        source: "live_github_api",
+        source: "live_github_api_auth",
         number: issue.number,
         title: issue.title,
         author: issue.user?.login || "anonymous",
         state: issue.state,
         labels: issue.labels.map((l) => (typeof l === "string" ? l : l.name)),
-        body: issue.body,
+        body: issue.body || "",
         comments: comments.map((c) => ({
           author: c.user?.login || "anonymous",
-          body: c.body
+          body: c.body || ""
         }))
       };
     } catch (err) {
-      console.warn(`[GitHub API Warning] Could not fetch live issue (${err.message}). Falling back to local catalog.`);
+      console.warn(`[GitHub API Warning] Auth fetch failed (${err.message}). Trying public API.`);
     }
   }
 
-  // Fallback to mock / demo catalog
+  // 2. Try unauthenticated public GitHub REST API
+  try {
+    const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}`, {
+      headers: {
+        "User-Agent": "ContribForge-Agent/1.0",
+        "Accept": "application/vnd.github.v3+json"
+      }
+    });
+
+    if (res.ok) {
+      const issue = await res.json();
+      return {
+        source: "live_github_api_public",
+        number: issue.number,
+        title: issue.title,
+        author: issue.user?.login || "anonymous",
+        state: issue.state,
+        labels: (issue.labels || []).map((l) => (typeof l === "string" ? l : l.name)),
+        body: issue.body || "",
+        comments: []
+      };
+    }
+  } catch (err) {
+    console.warn(`[GitHub Public API Error] ${err.message}`);
+  }
+
+  // 3. HTML scrape fallback for public repositories
+  try {
+    const htmlRes = await fetch(`https://github.com/${owner}/${repo}/issues/${issueNumber}`, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+      }
+    });
+
+    if (htmlRes.ok) {
+      const html = await htmlRes.text();
+      const titleMatch = html.match(/<bdi class="js-issue-title[^>]*>([\s\S]*?)<\/bdi>/) ||
+                         html.match(/<title>([\s\S]*?)<\/title>/);
+      let rawTitle = titleMatch
+        ? titleMatch[1].replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").trim()
+        : `Issue #${issueNumber}`;
+      rawTitle = rawTitle.replace(/ · Issue #\d+ · .*?· GitHub$/, "").trim();
+
+      const bodyMatch = html.match(/<td class="d-block comment-body markdown-body[^>]*>([\s\S]*?)<\/td>/);
+      const cleanBody = bodyMatch
+        ? bodyMatch[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+        : `Issue #${issueNumber} from ${owner}/${repo}`;
+
+      return {
+        source: "live_github_html_scrape",
+        number: Number(issueNumber),
+        title: rawTitle,
+        author: "github-contributor",
+        state: "open",
+        labels: ["bug"],
+        body: cleanBody,
+        comments: []
+      };
+    }
+  } catch (err) {
+    console.warn(`[GitHub HTML Scraper Warning] ${err.message}`);
+  }
+
+  // 4. Resilient local fallback catalog
   const fallback = MOCK_ISSUES[Number(issueNumber)] || {
     number: Number(issueNumber),
     title: `Issue #${issueNumber}: Unhandled edge case in repository`,
     author: "demo-user",
     state: "open",
     labels: ["bug"],
-    body: `Issue #${issueNumber}: Automated bug report. Investigate edge cases in configuration parser and verify unit tests.`,
+    body: `Issue #${issueNumber}: Automated bug report for ${owner}/${repo}. Investigate edge cases in configuration parser and verify unit tests.`,
     comments: []
   };
 

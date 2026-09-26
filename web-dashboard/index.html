@@ -20,7 +20,7 @@
           </svg>
         </a>
         <nav class="nav-icons">
-          <button class="nav-btn active" title="Agent Pipeline">
+          <button class="nav-btn active" title="Agent Pipeline" id="navPipelineBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
               <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
@@ -28,35 +28,28 @@
               <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
             </svg>
           </button>
-          <button class="nav-btn" title="Search">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </button>
-          <button class="nav-btn" title="Notifications">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-            </svg>
-          </button>
-          <button class="nav-btn" title="Settings">
+          <button class="nav-btn" title="API Keys & Settings" id="settingsNavBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
             </svg>
           </button>
+          <button class="nav-btn" title="View Source on GitHub" id="githubRepoBtn" onclick="window.open('https://github.com/Tejender06/ContribForge', '_blank')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+          </button>
         </nav>
       </div>
       <div class="sidebar-bottom">
-        <button class="nav-btn" title="Help">
+        <button class="nav-btn" title="Hackathon Architecture Guide" id="helpNavBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
             <line x1="12" y1="17" x2="12.01" y2="17"></line>
           </svg>
         </button>
-        <div class="avatar-pill" title="Tejender Singh">TS</div>
+        <div class="avatar-pill" title="Tejender Singh (Lead Architect)">TS</div>
       </div>
     </aside>
 
@@ -65,43 +58,62 @@
       <!-- Top Header Navigation -->
       <header class="app-topbar">
         <div class="topbar-left">
-          <span class="back-link">←</span>
-          <span class="project-title">Autonomous AI Developer Agent</span>
+          <span class="back-link" title="TrueFoundry x Polaris Hackathon">⚡</span>
+          <span class="project-title">ContribForge</span>
           <span class="separator">/</span>
           <span class="repo-badge" id="topbarRepoBadge">truefoundry / micro-config &gt; Issue #14</span>
         </div>
 
-        <div class="topbar-search">
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <!-- Real GitHub Issue URL Input -->
+        <div class="topbar-issue-input-wrap">
+          <svg class="gh-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
           </svg>
-          <input type="text" placeholder="Search operations, symbols, or logs..." readonly />
-          <kbd class="kbd-shortcut">⌘K</kbd>
+          <input type="text" id="issueUrlInput" placeholder="Paste GitHub Issue URL (e.g. https://github.com/owner/repo/issues/14)" />
+          <button id="loadUrlBtn" class="input-inline-btn" title="Fetch live GitHub issue">Load</button>
         </div>
 
         <div class="topbar-right">
+          <!-- Preset Selector -->
           <div class="issue-selector-capsule">
             <span class="issue-selector-icon">🎯</span>
-            <label for="issueSelect" class="selector-label">Target Bug:</label>
+            <label for="issueSelect" class="selector-label">Preset:</label>
             <select id="issueSelect" class="issue-dropdown">
-              <option value="14" selected>#14: Port TypeError (Crash)</option>
+              <option value="14" selected>#14: PORT TypeError (micro-config)</option>
               <option value="12">#12: Scheme Prefix in parseHost</option>
+              <option value="custom">Custom Issue URL...</option>
             </select>
           </div>
 
+          <!-- Telemetry Stats -->
           <div class="telemetry-capsule">
             <span class="tele-item"><span class="dot-cpu"></span> CPU: 1.2 vCPU</span>
             <span class="tele-divider">|</span>
             <span class="tele-item"><span class="dot-mem"></span> MEM: 3.4 GB</span>
           </div>
 
+          <!-- Settings Button -->
+          <button id="openSettingsBtn" class="action-btn-secondary" title="Configure API Keys &amp; Reasoning Model">
+            <svg class="gear-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span class="btn-text-label">Keys</span>
+            <span class="key-indicator-dot" id="keyIndicatorDot"></span>
+          </button>
+
+          <!-- Cancel Button -->
+          <button id="cancelBtn" class="action-btn-danger hidden" title="Cancel Running Session">
+            <span>Cancel</span>
+          </button>
+
+          <!-- Run Button -->
           <button id="runBtn" class="action-btn-primary">
             <span class="btn-glow"></span>
             <svg class="btn-play-icon" viewBox="0 0 24 24" fill="currentColor">
               <polygon points="5 3 19 12 5 21 5 3"></polygon>
             </svg>
-            <span id="runBtnText">Run Issue #14 Demo</span>
+            <span id="runBtnText">Solve Issue &amp; Open PR</span>
             <kbd class="kbd-btn">⌘R</kbd>
           </button>
         </div>
@@ -135,8 +147,8 @@
               </div>
               <div class="node-content">
                 <div class="node-title">Issue Ingestion</div>
-                <div class="node-desc" id="node0Desc">Fetch issue #14 details &amp; stack trace</div>
-                <div class="node-badge badge-neutral">INITIAL RECON</div>
+                <div class="node-desc" id="node0Desc">Fetch issue details &amp; stack trace from GitHub</div>
+                <div class="node-badge badge-neutral" id="node0Badge">INITIAL RECON</div>
               </div>
             </div>
 
@@ -154,7 +166,7 @@
               </div>
               <div class="node-content">
                 <div class="node-title">Hermetic Sandbox Red Check</div>
-                <div class="node-desc">Author repro test &amp; confirm failure</div>
+                <div class="node-desc" id="node1Desc">Author repro test &amp; confirm defect (Empirical Red)</div>
                 <div class="node-badge badge-red" id="badgeRed">FAILING TEST (RED)</div>
               </div>
             </div>
@@ -172,8 +184,8 @@
               </div>
               <div class="node-content">
                 <div class="node-title">Surgical AST Patch</div>
-                <div class="node-desc">Serena symbol refactor in config-parser.js</div>
-                <div class="node-badge badge-cyan">AST SYMBOL FIX</div>
+                <div class="node-desc" id="node2Desc">Serena symbol refactor &amp; defensive boundary fix</div>
+                <div class="node-badge badge-cyan" id="node2Badge">AST SYMBOL FIX</div>
               </div>
             </div>
 
@@ -189,7 +201,7 @@
               </div>
               <div class="node-content">
                 <div class="node-title">Sandbox Green Check</div>
-                <div class="node-desc">Repro passed &amp; zero test suite regression</div>
+                <div class="node-desc" id="node3Desc">Repro verified passing &amp; zero test regressions</div>
                 <div class="node-badge badge-green" id="badgeGreen">PASSED TEST (GREEN)</div>
               </div>
             </div>
@@ -197,7 +209,7 @@
             <!-- Connector 4 -> 5 -->
             <div class="dag-connector-v"></div>
 
-            <!-- Node 5: Human-in-the-Loop Approval Gate (Highlighted) -->
+            <!-- Node 5: Human-in-the-Loop Approval Gate -->
             <div class="dag-node dag-node-gated" id="node-4">
               <div class="node-icon-box node-icon-gate">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -206,50 +218,48 @@
               </div>
               <div class="node-content">
                 <div class="node-title glow-text">Human-in-the-Loop Approval Gate</div>
-                <div class="node-desc">Halt execution before irreversible action</div>
-                <div class="node-badge badge-gated">TRUEFORGE PAUSE GATE</div>
+                <div class="node-desc">TrueForge Pause Barrier before irreversible PR creation</div>
+                <div class="node-badge badge-gate">APPROVAL BARRIER</div>
               </div>
             </div>
 
             <!-- Connector 5 -> 6 -->
             <div class="dag-connector-v"></div>
 
-            <!-- Node 6: Upstream PR Deployment -->
+            <!-- Node 6: Upstream Deployment -->
             <div class="dag-node" id="node-5">
-              <div class="node-icon-box">
+              <div class="node-icon-box node-icon-violet">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="6" y1="3" x2="6" y2="15"></line>
-                  <circle cx="18" cy="6" r="3"></circle>
-                  <circle cx="6" cy="18" r="3"></circle>
-                  <path d="M18 9a9 9 0 0 1-9 9"></path>
+                  <circle cx="18" cy="18" r="3"></circle>
+                  <circle cx="6" cy="6" r="3"></circle>
+                  <path d="M13 6h3a2 2 0 0 1 2 2v7"></path>
+                  <line x1="6" y1="9" x2="6" y2="21"></line>
                 </svg>
               </div>
               <div class="node-content">
-                <div class="node-title">Upstream Deployment</div>
-                <div class="node-desc">Commit, push branch &amp; create GitHub PR</div>
-                <div class="node-badge badge-neutral" id="badgeDeployment">READY TO MERGE</div>
+                <div class="node-title">Pull Request Deployment</div>
+                <div class="node-desc" id="node5Desc">Push verified branch &amp; create GitHub Pull Request</div>
+                <div class="node-badge badge-neutral" id="badgeDeployment">AWAITING TRIGGER</div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Right Pane: Code Diff & Real-Time Terminal -->
-        <section class="inspector-container">
-          <!-- Monaco-Style Code Diff Card -->
-          <div class="code-diff-card">
+        <!-- Right Pane: Monaco Diff & Developer Terminal -->
+        <section class="code-terminal-container">
+          <!-- Diff Inspection Card -->
+          <div class="code-pane-card">
             <div class="pane-header">
-              <div class="file-tab">
-                <span class="git-status-dot"></span>
-                <span class="filename font-mono">src/config-parser.js</span>
-                <span class="diff-stat-pill" id="diffStatPill">+9 -1</span>
+              <div class="file-tab-item active">
+                <svg class="file-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span class="file-path font-mono" id="diffFilePath">src/config-parser.js</span>
+                <span class="diff-badge" id="diffStatPill">+4 -1</span>
               </div>
               <div class="pane-actions">
-                <button class="icon-tool-btn" title="Copy diff">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                </button>
-                <button class="icon-tool-btn" title="Toggle full-screen">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
-                </button>
+                <span class="pane-tag">UNIFIED AST DIFF</span>
               </div>
             </div>
             <div class="diff-editor-wrap">
@@ -267,18 +277,21 @@
           <div class="terminal-pane-card">
             <div class="pane-header terminal-header">
               <div class="terminal-tab-group">
-                <button class="tab-item active">Terminal</button>
-                <button class="tab-item">Sandbox Logs</button>
-                <button class="tab-item">Telemetry</button>
+                <button class="tab-item active" data-filter="all">All Logs</button>
+                <button class="tab-item" data-filter="reasoning">Reasoning</button>
+                <button class="tab-item" data-filter="sandbox">Sandbox</button>
+                <button class="tab-item" data-filter="gate">Pause Gate</button>
               </div>
               <div class="terminal-meta">
-                <span class="term-status-pill">ISOLATED PROCESS</span>
+                <button class="term-tool-btn" id="copyLogsBtn" title="Copy Terminal Logs">Copy</button>
+                <button class="term-tool-btn" id="clearLogsBtn" title="Clear Output">Clear</button>
+                <span class="term-status-pill">HERMETIC SANDBOX</span>
                 <span class="term-timer font-mono" id="termTimer">00:00</span>
               </div>
             </div>
             <div class="terminal-screen" id="terminalOutput">
-              <div class="t-line t-dim">// ContribForge v1.0.0 — Sandbox container initialized.</div>
-              <div class="t-line t-dim">// Ready to execute Test-Driven Agentics loop. Click "Run Issue #14 Demo" above.</div>
+              <div class="t-line t-dim">// ContribForge v1.0.0 — Autonomous Developer Agent initialized.</div>
+              <div class="t-line t-dim">// Select an issue preset above or paste any GitHub issue URL to begin.</div>
             </div>
           </div>
         </section>
@@ -345,6 +358,119 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
               <span>Allow &amp; Create Pull Request</span>
               <kbd class="kbd-modal">⌘↵</kbd>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal: API Keys & Model Configuration -->
+    <div class="modal-backdrop hidden" id="settingsModal">
+      <div class="modal-box modal-box-settings">
+        <div class="modal-glow-border"></div>
+        <div class="modal-inner">
+          <div class="modal-top">
+            <div class="modal-shield-badge modal-gear-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </div>
+            <div class="modal-title-wrap">
+              <div class="modal-pretitle">AGENT ENGINE CONFIGURATION</div>
+              <h2 class="modal-heading">Model &amp; API Key Settings</h2>
+            </div>
+          </div>
+
+          <div class="modal-card-content">
+            <div class="setting-field-group">
+              <div class="setting-label-row">
+                <label for="geminiKeyInput">Google Gemini API Key</label>
+                <span class="setting-badge" id="geminiStatusBadge">Offline (Heuristic Mode)</span>
+              </div>
+              <p class="setting-hint">Enables autonomous LLM reasoning via Google Gemini 2.5 Flash. If blank, ContribForge automatically uses its deterministic heuristic AST engine.</p>
+              <div class="input-with-action">
+                <input type="password" id="geminiKeyInput" placeholder="AIzaSy... (persisted locally)" />
+                <button type="button" class="toggle-vis-btn" id="toggleGeminiVis" title="Show/Hide">👁</button>
+              </div>
+            </div>
+
+            <div class="setting-field-group">
+              <div class="setting-label-row">
+                <label for="githubTokenInput">GitHub Personal Access Token (Optional)</label>
+                <span class="setting-badge" id="githubStatusBadge">Public / Anonymous</span>
+              </div>
+              <p class="setting-hint">Enables live Pull Request creation and higher rate limits on public &amp; private repositories.</p>
+              <div class="input-with-action">
+                <input type="password" id="githubTokenInput" placeholder="ghp_... or github_pat_..." />
+                <button type="button" class="toggle-vis-btn" id="toggleGithubVis" title="Show/Hide">👁</button>
+              </div>
+            </div>
+
+            <div class="setting-field-group">
+              <div class="setting-label-row">
+                <label for="modelSelect">Autonomous Reasoning Engine</label>
+              </div>
+              <select id="modelSelect" class="setting-select">
+                <option value="gemini-2.5-flash" selected>Google Gemini 2.5 Flash (Fastest &amp; Multimodal)</option>
+                <option value="gemini-1.5-pro">Google Gemini 1.5 Pro (Deep Code Analysis)</option>
+                <option value="gpt-4o">OpenAI GPT-4o (Compatible)</option>
+                <option value="heuristic">Autonomous Heuristic Symbolic Solver (No Key Needed)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-actions-bar">
+            <button id="closeSettingsBtn" class="btn-cancel">
+              <span>Close</span>
+            </button>
+            <button id="saveSettingsBtn" class="btn-allow">
+              <span class="btn-allow-glow"></span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Save Configuration</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Modal: Hackathon Architecture Guide -->
+    <div class="modal-backdrop hidden" id="helpModal">
+      <div class="modal-box modal-box-settings">
+        <div class="modal-glow-border"></div>
+        <div class="modal-inner">
+          <div class="modal-top">
+            <div class="modal-shield-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+            </div>
+            <div class="modal-title-wrap">
+              <div class="modal-pretitle">TRUEFOUNDRY × POLARIS HACKATHON</div>
+              <h2 class="modal-heading">ContribForge Architecture Guide</h2>
+            </div>
+          </div>
+
+          <div class="modal-card-content">
+            <div class="help-section">
+              <h4>1. What makes ContribForge unique?</h4>
+              <p>Unlike conversational assistants that suggest unverified snippets, ContribForge is an <strong>agent that acts</strong>. It isolates code execution in a hermetic sandbox, authors empirical reproduction tests, verifies defect failure (Red), synthesizes surgical patches (Green), and halts at the TrueForge Pause Gate before opening a Pull Request.</p>
+            </div>
+            <div class="help-section">
+              <h4>2. How to run any GitHub issue?</h4>
+              <p>Paste any public GitHub Issue URL into the top search bar (e.g. <code>https://github.com/expressjs/express/issues/5300</code>) and click <strong>Load</strong>, then click <strong>Solve Issue &amp; Open PR</strong>.</p>
+            </div>
+            <div class="help-section">
+              <h4>3. Keyboard Shortcuts</h4>
+              <p><code>⌘R</code> / <code>Ctrl+R</code>: Trigger agent workflow &bull; <code>⌘↵</code> / <code>Ctrl+Enter</code>: Approve Pull Request &bull; <code>Esc</code>: Close modal / deny.</p>
+            </div>
+          </div>
+
+          <div class="modal-actions-bar">
+            <button id="closeHelpBtn" class="btn-allow">
+              <span>Got it!</span>
             </button>
           </div>
         </div>
