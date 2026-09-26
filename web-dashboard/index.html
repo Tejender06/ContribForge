@@ -3,185 +3,355 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ContribForge — Autonomous Open-Source Agent</title>
+  <title>ContribForge — Autonomous AI Developer Agent</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
-  <div class="app-layout">
-    <!-- Header -->
-    <header class="navbar">
-      <div class="brand">
-        <div class="logo-badge">⚡</div>
-        <div>
-          <h1>ContribForge</h1>
-          <p class="tagline">Autonomous Issue Resolver · TrueFoundry × Polaris Hackathon</p>
-        </div>
+<body class="theme-dark">
+  <div class="shell-container">
+    <!-- Slim Left Icon Sidebar -->
+    <aside class="sidebar-rail">
+      <div class="sidebar-top">
+        <a href="#" class="brand-logo" title="ContribForge">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </a>
+        <nav class="nav-icons">
+          <button class="nav-btn active" title="Agent Pipeline">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+            </svg>
+          </button>
+          <button class="nav-btn" title="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <button class="nav-btn" title="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </button>
+          <button class="nav-btn" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+        </nav>
       </div>
-      <div class="header-actions">
-        <div class="badge badge-harness">
-          <span class="status-dot"></span> TrueForge Harness Active
-        </div>
-        <button id="runBtn" class="btn btn-primary">
-          <span class="btn-icon">▶</span> Run Issue #14 Demo
+      <div class="sidebar-bottom">
+        <button class="nav-btn" title="Help">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
         </button>
+        <div class="avatar-pill" title="Tejender Singh">TS</div>
       </div>
-    </header>
+    </aside>
 
-    <!-- Main Content Grid -->
-    <main class="dashboard-grid">
-      <!-- Left Column: Pipeline & Steps -->
-      <section class="card pipeline-card">
-        <div class="card-header">
-          <h2>Agent Execution Pipeline</h2>
-          <span id="pipelineStatus" class="status-tag status-idle">IDLE</span>
+    <!-- Main Application View -->
+    <div class="workspace-area">
+      <!-- Top Header Navigation -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <span class="back-link">←</span>
+          <span class="project-title">Autonomous AI developer agent dashboard</span>
+          <span class="separator">/</span>
+          <span class="repo-badge">truefoundry / micro-config &gt; Issue #14</span>
         </div>
 
-        <div class="stepper" id="stepper">
-          <div class="step-item" id="step-0">
-            <div class="step-marker">1</div>
-            <div class="step-content">
-              <h4>Hermetic Sandbox Init</h4>
-              <p>Isolating workspace from host system</p>
-            </div>
-          </div>
-          <div class="step-item" id="step-1">
-            <div class="step-marker">2</div>
-            <div class="step-content">
-              <h4>GitHub Issue Reconnaissance</h4>
-              <p>Extracting stack trace & bug description</p>
-            </div>
-          </div>
-          <div class="step-item" id="step-2">
-            <div class="step-marker">3</div>
-            <div class="step-content">
-              <h4>Empirical Red Check</h4>
-              <p>Authoring repro test & confirming failure</p>
-            </div>
-          </div>
-          <div class="step-item" id="step-3">
-            <div class="step-marker">4</div>
-            <div class="step-content">
-              <h4>Surgical Code Patch</h4>
-              <p>Applying defensive guard in config-parser.js</p>
-            </div>
-          </div>
-          <div class="step-item" id="step-4">
-            <div class="step-marker">5</div>
-            <div class="step-content">
-              <h4>Empirical Green Check</h4>
-              <p>Verifying repro passes & running 100% test suite</p>
-            </div>
-          </div>
-          <div class="step-item" id="step-5">
-            <div class="step-marker">6</div>
-            <div class="step-content">
-              <h4>🛡️ Human-in-the-Loop Pause Gate</h4>
-              <p>Halting for operator sign-off before PR</p>
-            </div>
-          </div>
-          <div class="step-item" id="step-6">
-            <div class="step-marker">7</div>
-            <div class="step-content">
-              <h4>Pull Request Submission</h4>
-              <p>Pushing verified branch & opening PR</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Right Column: Terminal & Diff -->
-      <section class="details-column">
-        <!-- Live Sandbox Terminal -->
-        <div class="card terminal-card">
-          <div class="card-header">
-            <div class="terminal-dots">
-              <span class="dot dot-red"></span>
-              <span class="dot dot-yellow"></span>
-              <span class="dot dot-green"></span>
-              <span class="terminal-title">sandbox_workspace &gt; execution stream</span>
-            </div>
-            <span id="terminalTimer" class="time-badge">00:00</span>
-          </div>
-          <div class="terminal-body" id="terminalOutput">
-            <div class="term-line info">[System]: ContribForge ready. Click "Run Issue #14 Demo" to start.</div>
-          </div>
+        <div class="topbar-search">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Search operations, symbols, or logs..." readonly />
+          <kbd class="kbd-shortcut">⌘K</kbd>
         </div>
 
-        <!-- Git Diff & Verification Card -->
-        <div class="card diff-card">
-          <div class="card-header">
-            <h2>Sandbox Git Diff</h2>
-            <span class="badge" id="diffBadge">0 changes</span>
-          </div>
-          <pre class="diff-view" id="diffView"><code>// No uncommitted changes in sandbox.</code></pre>
-        </div>
-      </section>
-    </main>
-
-    <!-- Modal: The PAUSE Gate (Human-in-the-Loop Approval) -->
-    <div class="modal-overlay hidden" id="approvalModal">
-      <div class="modal-card">
-        <div class="modal-header">
-          <div class="shield-icon">🛡️</div>
-          <div>
-            <h3>Human-in-the-Loop Checkpoint</h3>
-            <p>TrueForge Harness has paused execution for an irreversible action.</p>
-          </div>
-        </div>
-
-        <div class="modal-body">
-          <div class="modal-meta-grid">
-            <div class="meta-item">
-              <span class="label">Action</span>
-              <span class="val font-mono" id="modalAction">submit_pull_request</span>
-            </div>
-            <div class="meta-item">
-              <span class="label">Target Repository</span>
-              <span class="val font-mono" id="modalTarget">truefoundry/micro-config</span>
-            </div>
-            <div class="meta-item">
-              <span class="label">Branch</span>
-              <span class="val font-mono" id="modalBranch">fix/issue-14-empty-port</span>
-            </div>
+        <div class="topbar-right">
+          <div class="telemetry-capsule">
+            <span class="tele-item"><span class="dot-cpu"></span> CPU: 1.2 vCPU</span>
+            <span class="tele-divider">|</span>
+            <span class="tele-item"><span class="dot-mem"></span> MEM: 3.4 GB</span>
           </div>
 
-          <div class="verification-pill">
-            <span class="check-icon">✔</span>
-            <span>Reproduction test passed in sandbox · 5/5 unit tests passed (Zero Regressions)</span>
-          </div>
-
-          <div class="modal-pr-preview">
-            <h4 id="modalPrTitle">fix(config): default port to 3000 when PORT is unset</h4>
-            <div class="pr-body-snippet" id="modalPrBody">
-              Resolves #14: Added defensive guard for undefined, null, and empty string in parsePortConfig.
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button id="denyBtn" class="btn btn-secondary">
-            ✖ Reject & Cancel
+          <button id="runBtn" class="action-btn-primary">
+            <span class="btn-glow"></span>
+            <svg class="btn-play-icon" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span>Run Issue #14 Demo</span>
+            <kbd class="kbd-btn">⌘R</kbd>
           </button>
-          <button id="approveBtn" class="btn btn-approve">
-            ✔ Allow & Create Pull Request
-          </button>
+        </div>
+      </header>
+
+      <!-- Main Dual-Pane Dashboard -->
+      <main class="dashboard-body">
+        <!-- Left Pane: Node-Based Pipeline Graph -->
+        <section class="dag-canvas-container">
+          <div class="canvas-header">
+            <div class="canvas-title-group">
+              <span class="canvas-title">EXECUTION PIPELINE GRAPH</span>
+              <span class="canvas-subtitle">Hermetic Sandbox Execution &amp; HITL Boundary</span>
+            </div>
+            <div class="status-indicator-badge" id="pipelineStatus">
+              <span class="pulse-dot"></span> IDLE
+            </div>
+          </div>
+
+          <div class="dag-graph">
+            <!-- Node 1: Issue Ingestion -->
+            <div class="dag-node" id="node-0">
+              <div class="node-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
+              <div class="node-content">
+                <div class="node-title">Issue Ingestion</div>
+                <div class="node-desc">Fetch issue #14 details &amp; stack trace</div>
+                <div class="node-badge badge-neutral">INITIAL RECON</div>
+              </div>
+            </div>
+
+            <!-- Connector 1 -> 2 -->
+            <div class="dag-connector-v"></div>
+
+            <!-- Node 2: Hermetic Sandbox Red Check -->
+            <div class="dag-node" id="node-1">
+              <div class="node-icon-box node-icon-red">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="15" y1="9" x2="9" y2="15"></line>
+                  <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+              </div>
+              <div class="node-content">
+                <div class="node-title">Hermetic Sandbox Red Check</div>
+                <div class="node-desc">Author repro test &amp; confirm failure</div>
+                <div class="node-badge badge-red" id="badgeRed">FAILING TEST (RED)</div>
+              </div>
+            </div>
+
+            <!-- Connector 2 -> 3 -->
+            <div class="dag-connector-v"></div>
+
+            <!-- Node 3: Surgical AST Patch -->
+            <div class="dag-node" id="node-2">
+              <div class="node-icon-box node-icon-cyan">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="16 18 22 12 16 6"></polyline>
+                  <polyline points="8 6 2 12 8 18"></polyline>
+                </svg>
+              </div>
+              <div class="node-content">
+                <div class="node-title">Surgical AST Patch</div>
+                <div class="node-desc">Serena symbol refactor in config-parser.js</div>
+                <div class="node-badge badge-cyan">AST SYMBOL FIX</div>
+              </div>
+            </div>
+
+            <!-- Connector 3 -> 4 -->
+            <div class="dag-connector-v"></div>
+
+            <!-- Node 4: Sandbox Green Check -->
+            <div class="dag-node" id="node-3">
+              <div class="node-icon-box node-icon-green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+              <div class="node-content">
+                <div class="node-title">Sandbox Green Check</div>
+                <div class="node-desc">Repro passed &amp; zero test suite regression</div>
+                <div class="node-badge badge-green" id="badgeGreen">PASSED TEST (GREEN)</div>
+              </div>
+            </div>
+
+            <!-- Connector 4 -> 5 -->
+            <div class="dag-connector-v"></div>
+
+            <!-- Node 5: Human-in-the-Loop Approval Gate (Highlighted) -->
+            <div class="dag-node dag-node-gated" id="node-4">
+              <div class="node-icon-box node-icon-gate">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <div class="node-content">
+                <div class="node-title glow-text">Human-in-the-Loop Approval Gate</div>
+                <div class="node-desc">Halt execution before irreversible action</div>
+                <div class="node-badge badge-gated">TRUEFORGE PAUSE GATE</div>
+              </div>
+            </div>
+
+            <!-- Connector 5 -> 6 -->
+            <div class="dag-connector-v"></div>
+
+            <!-- Node 6: Upstream PR Deployment -->
+            <div class="dag-node" id="node-5">
+              <div class="node-icon-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="6" y1="3" x2="6" y2="15"></line>
+                  <circle cx="18" cy="6" r="3"></circle>
+                  <circle cx="6" cy="18" r="3"></circle>
+                  <path d="M18 9a9 9 0 0 1-9 9"></path>
+                </svg>
+              </div>
+              <div class="node-content">
+                <div class="node-title">Upstream Deployment</div>
+                <div class="node-desc">Commit, push branch &amp; create GitHub PR</div>
+                <div class="node-badge badge-neutral" id="badgeDeployment">READY TO MERGE</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Pane: Code Diff & Real-Time Terminal -->
+        <section class="inspector-container">
+          <!-- Monaco-Style Code Diff Card -->
+          <div class="code-diff-card">
+            <div class="pane-header">
+              <div class="file-tab">
+                <span class="git-status-dot"></span>
+                <span class="filename font-mono">src/config-parser.js</span>
+                <span class="diff-stat-pill" id="diffStatPill">+9 -1</span>
+              </div>
+              <div class="pane-actions">
+                <button class="icon-tool-btn" title="Copy diff">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+                <button class="icon-tool-btn" title="Toggle full-screen">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                </button>
+              </div>
+            </div>
+            <div class="diff-editor-wrap">
+              <pre class="diff-monaco-view" id="diffView"><code><span class="diff-line diff-ctx">  export function parsePortConfig(rawPort) {</span>
+<span class="diff-line diff-del">-   const trimmed = rawPort.trim();</span>
+<span class="diff-line diff-add">+   if (rawPort === undefined || rawPort === null || (typeof rawPort === "string" && rawPort.trim() === "")) {</span>
+<span class="diff-line diff-add">+     return 3000;</span>
+<span class="diff-line diff-add">+   }</span>
+<span class="diff-line diff-add">+   const trimmed = typeof rawPort === "string" ? rawPort.trim() : String(rawPort);</span>
+<span class="diff-line diff-ctx">    const parsed = parseInt(trimmed, 10);</span></code></pre>
+            </div>
+          </div>
+
+          <!-- Developer Sandbox Terminal Card -->
+          <div class="terminal-pane-card">
+            <div class="pane-header terminal-header">
+              <div class="terminal-tab-group">
+                <button class="tab-item active">Terminal</button>
+                <button class="tab-item">Sandbox Logs</button>
+                <button class="tab-item">Telemetry</button>
+              </div>
+              <div class="terminal-meta">
+                <span class="term-status-pill">ISOLATED PROCESS</span>
+                <span class="term-timer font-mono" id="termTimer">00:00</span>
+              </div>
+            </div>
+            <div class="terminal-screen" id="terminalOutput">
+              <div class="t-line t-dim">// ContribForge v1.0.0 — Sandbox container initialized.</div>
+              <div class="t-line t-dim">// Ready to execute Test-Driven Agentics loop. Click "Run Issue #14 Demo" above.</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- The TrueForge PAUSE Gate Modal (Human-in-the-Loop Checkpoint) -->
+    <div class="modal-backdrop hidden" id="approvalModal">
+      <div class="modal-box">
+        <div class="modal-glow-border"></div>
+        <div class="modal-inner">
+          <div class="modal-top">
+            <div class="modal-shield-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <div class="modal-title-wrap">
+              <div class="modal-pretitle">HUMAN-IN-THE-LOOP CHECKPOINT</div>
+              <h2 class="modal-heading">Execution Paused for Irreversible Action</h2>
+            </div>
+          </div>
+
+          <div class="modal-card-content">
+            <div class="meta-row">
+              <div class="meta-block">
+                <span class="meta-label">Action</span>
+                <span class="meta-value font-mono">submit_pull_request</span>
+              </div>
+              <div class="meta-block">
+                <span class="meta-label">Target Repository</span>
+                <span class="meta-value font-mono" id="modalTarget">truefoundry/micro-config</span>
+              </div>
+              <div class="meta-block">
+                <span class="meta-label">Branch</span>
+                <span class="meta-value font-mono" id="modalBranch">fix/issue-14-empty-port</span>
+              </div>
+            </div>
+
+            <div class="sandbox-proof-box">
+              <div class="proof-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>VERIFIED BY HERMETIC SANDBOX</span>
+              </div>
+              <div class="proof-desc">
+                Reproduction test failed on clean source (Red), verified passing with patch (Green), and passed 100% of existing unit tests with zero regressions.
+              </div>
+            </div>
+
+            <div class="pr-preview-container">
+              <div class="pr-title-heading" id="modalPrTitle">fix(config): default port to 3000 when PORT is unset (resolves #14)</div>
+              <div class="pr-body-text" id="modalPrBody">
+                Resolves #14: Added defensive guard for undefined, null, and empty string in parsePortConfig.
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-actions-bar">
+            <button id="denyBtn" class="btn-cancel">
+              <span>Reject &amp; Discard</span>
+            </button>
+            <button id="approveBtn" class="btn-allow">
+              <span class="btn-allow-glow"></span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Allow &amp; Create Pull Request</span>
+              <kbd class="kbd-modal">⌘↵</kbd>
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Success Banner -->
-    <div class="pr-success-bar hidden" id="prSuccessBar">
-      <div class="pr-success-content">
-        <span class="success-icon">🎉</span>
-        <div>
-          <h4>Pull Request Successfully Opened!</h4>
-          <p id="prSuccessMessage">View on GitHub: <a href="#" id="prSuccessLink" target="_blank">Loading...</a></p>
-        </div>
+    <!-- Live Toast Success Banner -->
+    <div class="live-toast hidden" id="prSuccessBar">
+      <div class="toast-indicator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
       </div>
-      <button class="btn btn-small" id="closeSuccessBtn">Dismiss</button>
+      <div class="toast-body">
+        <h4>Pull Request Successfully Opened!</h4>
+        <p id="prSuccessMessage"><a href="#" id="prSuccessLink" target="_blank">View on GitHub →</a></p>
+      </div>
+      <button class="toast-close-btn" id="closeSuccessBtn">✕</button>
     </div>
   </div>
 
