@@ -1,168 +1,216 @@
 # ContribForge ⚡
-### *Autonomous Open-Source Issue Resolver with Sandboxed Verification & Human-in-the-Loop Governance*
+### *Autonomous Open-Source Ticket Resolver with Hermetic Verification & Human-in-the-Loop Governance*
 
-[![Event: TrueFoundry x Polaris Hackathon](https://img.shields.io/badge/Event-TrueFoundry%20%C3%97%20Polaris%20Hackathon-blue)](https://luma.com/truefo-kb06)
-[![Harness: TrueForge](https://img.shields.io/badge/Harness-%40truefoundry%2Ftrueforge-indigo)](https://trueforge.dev)
-[![Engine: Serena AST](https://img.shields.io/badge/Engine-Serena%20Symbolic-emerald)](#serena-integration)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![Problem Statement: Ticket Resolver](https://img.shields.io/badge/Problem%20Statement-Ticket%20Resolver-blueviolet?style=for-the-badge&logo=github)](https://github.com/Tejender06/ContribForge)
+[![Event: TrueFoundry x Polaris Hackathon](https://img.shields.io/badge/Event-TrueFoundry%20%C3%97%20Polaris%20Hackathon-blue?style=for-the-badge)](https://luma.com/truefo-kb06)
+[![Harness: TrueForge](https://img.shields.io/badge/Harness-%40truefoundry%2Ftrueforge-indigo?style=for-the-badge)](https://trueforge.dev)
+[![Docker: Ready](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](Dockerfile)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 > **"Anything can talk. An agent has to reach your real systems, run the code it writes without breaking anything, and know when to stop and ask."**  
-> — TrueFoundry × Polaris Hackathon Mandate
+> — *TrueFoundry × Polaris Hackathon Mandate*
 
 ---
 
-## 🌟 Overview
+## 🌟 Executive Summary
 
-**ContribForge** is an autonomous developer copilot built on the **TrueForge Agent Harness** and **Serena**. Given any GitHub issue, ContribForge:
-1. **Reaches real tools:** Interacts with GitHub via Octokit and executes version-controlled workflows with Git CLI.
-2. **Practices Test-Driven Agentics (TDA):** Authors an isolated reproduction script in a hermetic sandbox and verifies that it **fails (🔴 RED)** before touching any code.
-3. **Applies surgical patches:** Uses Serena's AST-level symbol awareness to patch only affected declarations without blowing context limits.
-4. **Verifies zero regressions:** Re-runs the repro test until **green (🟢)**, and executes the entire repository test suite.
-5. **Enforces the TrueForge "Pause" Gate:** Halts before irreversible actions (pushing commits or opening a public PR), presenting an interactive diff and requiring explicit developer sign-off.
+**ContribForge** is an autonomous AI developer agent categorized under the **Ticket Resolver** problem statement. It solves real-world open-source issues end-to-end:
+1. **Reaches Real Systems:** Ingests live issues and comments directly from GitHub via the GitHub REST API and authenticates with Git Credential Manager.
+2. **Empirical Test-Driven Agentics (TDA):** Automatically indexes the codebase, identifies culprit files, authors an isolated reproduction script in a hermetic sandbox, and verifies that the test **empirically fails on unmodified baseline code (🔴 RED)** before touching any application logic.
+3. **Surgical Self-Healing Patching:** Analyzes AST boundaries, applies surgical modifications to the code, and verifies that the reproduction test passes **(🟢 GREEN)** with **0 regressions** across the full test suite.
+4. **Mandatory Human-in-the-Loop (HITL) Gate:** Halts execution before any irreversible action (pushing commits or creating pull requests), presenting an interactive side-by-side Monaco diff and requiring explicit developer authorization.
+5. **Authentic GitHub Pull Requests:** Automatically syncs the user's fork with upstream master, creates a semantic branch, writes professional conventional commit messages, strictly excludes scratch reproduction files, and opens a verified live Pull Request on GitHub.
 
 ---
 
-## 📐 Architecture
+## 🎯 Verified Live Demonstrations on Real Open-Source Repositories
 
+| Repository | Issue Solved | Language | Live GitHub Pull Request | Status |
+| :--- | :--- | :--- | :--- | :--- |
+| **bitcoin/bitcoin** | [#36216: Intermittent timeout in interface_http.py](https://github.com/bitcoin/bitcoin/issues/36216) | Python | [Tejender06/bitcoin #6](https://github.com/Tejender06/bitcoin/pull/6) | **OPEN (Verified Live)** 🟢 |
+| **truefoundry/micro-config** | [#14: PORT TypeError crash when unset/empty](https://github.com/truefoundry/micro-config/issues/14) | Node.js | [Tejender06/ContribForge #2](https://github.com/Tejender06/ContribForge/pull/2) | **OPEN (Verified Live)** 🟢 |
+
+---
+
+## 📐 Architecture & Execution Lifecycle
+
+```mermaid
+flowchart TD
+    A[GitHub Issue / Ticket URL] --> B[GitHub API Connector: fetch_github_issue]
+    B --> C[Codebase Indexer & Language Detection]
+    C --> D[Hermetic Sandbox Environment]
+    D --> E[Phase 1: Synthesize Reproduction Script]
+    E --> F{Empirical Red Check}
+    F -->|Exit != 0 Bug Confirmed 🔴| G[Phase 2: Surgical Patch Synthesis AST / Gemini]
+    F -->|Exit == 0 Inconclusive| E
+    G --> H{Empirical Green Check}
+    H -->|Exit == 0 Pass 🟢| I[Phase 3: Full Regression Test Suite]
+    H -->|Exit != 0| G
+    I -->|Zero Regressions Confirmed| J[🛡️ TRUEFORGE HUMAN-IN-THE-LOOP GATE]
+    J --> K{Operator Decision}
+    K -->|Denied| L[Execution Halted Sandbox Preserved]
+    K -->|Authorized| M[Phase 4: Auto-Sync Fork & Git Commit]
+    M --> N[🚀 Live GitHub Pull Request Opened]
 ```
-                                ┌──────────────────────────────────────┐
-                                │   TrueForge Harness (Port 8790)     │
-                                │   - Session State Persistence        │
-                                │   - Dynamic Sub-Agents & Compaction  │
-                                │   - Human-in-the-Loop Pause Gate     │
-                                └──────────────────┬───────────────────┘
-                                                   │ MCP Protocol (stdio)
-                                                   ▼
-                                ┌──────────────────────────────────────┐
-                                │       ContribForge MCP Server        │
-                                │       (contribforge-mcp)             │
-                                └───────┬──────────────────────┬───────┘
-                                        │                      │
-                         GitHub & Git Connector         Hermetic Execution Sandbox
-                         - fetch_github_issue           - run_sandbox_command (Red/Green)
-                         - get_git_diff                 - write_file_in_sandbox
-                         - [GATED] submit_pull_request  - read_file_in_sandbox
-```
 
 ---
 
-## 🚀 Quickstart & Live Demo
+## 🚀 Key Features
+
+* **Multi-Language Sandbox Support:**
+  - **Node.js:** Native test runner (`node --test`), Jest, Mocha.
+  - **Python:** Unit testing & functional test suites (`pytest`, `test_framework`).
+* **Pristine Senior SWE Standards:**
+  - **Zero Noise Diffs:** Strictly filters out scratch reproduction scripts (`test_repro_*.py`, `*.test.js`) from commits. Only genuine production modifications are pushed.
+  - **Upstream Fast-Forward Sync:** Uses GitHub's `mergeUpstream` API to ensure the base branch is 100% synchronized with upstream prior to branching, avoiding massive outdated diffs.
+  - **Subsystem Commit Conventions:** Follows project-specific standards (e.g., Bitcoin Core `qa: ...` or Conventional Commits `fix(config): ...`).
+* **Interactive Web Dashboard:**
+  - Glassmorphic dark-mode UI powered by TailwindCSS and Lucide Icons.
+  - Dual-pane layout: Visual Pipeline DAG + Monaco Unified Diff Editor & Real-Time Terminal Stream.
+  - Multi-issue quick benchmark chips and custom GitHub Issue URL ingestion.
+* **Dual Execution Modes:**
+  - **Web Dashboard:** `http://localhost:4000` with WebSocket event streaming.
+  - **Terminal CLI:** Interactive and non-interactive auto-approval modes (`npm run cli`, `npm run cli:auto`).
+
+---
+
+## 💻 Quickstart & Setup
 
 ### 1. Prerequisites
-- Node.js 22.14 or newer (`node -v`)
-- Git (`git --version`)
+- **Node.js** 20.x or higher (`node -v`)
+- **Python** 3.10+ (for Python repository benchmarks)
+- **Git** (`git --version`)
 
-### 2. Start the ContribForge Web Dashboard
-Run the one-command orchestrator:
+### 2. Installation
 ```bash
-# In the root repository directory
+git clone https://github.com/Tejender06/ContribForge.git
+cd ContribForge
+npm install
+npm --prefix contribforge-mcp install
+npm --prefix orchestrator install
+npm --prefix demo-target-repo install
+```
+
+### 3. Launch the Web Dashboard
+```bash
 npm start
 ```
-Open your browser to: **[http://localhost:4000](http://localhost:4000)**
+Open your browser to: **`http://localhost:4000`**
 
-### 3. Run the Demo
-1. Choose an issue from the **Target Bug** selector in the top bar:
-   - **Issue #14:** `PORT` null/empty string crash (`TypeError: Cannot read properties of undefined`).
-   - **Issue #12:** `parseHost` scheme prefix (`http://` or `https://` socket binding error).
-2. Click **"Run Issue Demo"** (or press `⌘R` / `Ctrl+R`).
-3. Watch the live pipeline:
-   - **Step 1:** Sandbox initialization & isolation.
-   - **Step 2:** GitHub Issue context extraction.
-   - **Step 3:** Minimal reproduction authored & failed in sandbox (**🔴 Red Check**).
-   - **Step 4:** Surgical defensive patch applied via AST symbol manipulation.
-   - **Step 5:** Repro passed (**🟢 Green Check**) & 100% of regression unit tests pass.
-   - **Step 6:** **🛡️ PAUSE GATE ACTIVATED:** The TrueForge approval modal slides down with the full diff and test summary.
-   - **Step 7:** Click **"Allow & Create Pull Request"** (or press `⌘↵` / `Ctrl+Enter`) to trigger the irreversible submission.
+### 4. Running Benchmarks
+- Select any preset benchmark from the quick chips (e.g., `bitcoin/bitcoin #36216` or `micro-config #14`).
+- Or paste any public GitHub issue URL into the command bar and click **Load**.
+- Click **Solve Issue**.
+- Review the diff in the **Human-in-the-Loop** modal and click **Authorize & Open Pull Request**.
 
-### 4. Running via Terminal CLI
-If you prefer a terminal-based workflow:
+### 5. Running via Terminal CLI
 ```bash
-# Run interactive CLI on Issue #14 or Issue #12
+# Interactive mode (prompts before PR creation)
 npm run cli -- 14
-npm run cli -- 12
-```
-Or for automated benchmarking:
-```bash
+
+# Automated benchmark mode (auto-approves PR gate)
 npm run cli:auto -- 14
-npm run cli:auto -- 12
 ```
 
 ---
 
-## 🛠️ TrueForge Agent Harness Setup
+## 🐳 Docker Deployment
 
-ContribForge runs directly inside the official TrueForge runtime:
+ContribForge includes a production multi-language `Dockerfile` with Node.js, Python 3, and Git:
 
-1. **Launch TrueForge:**
-   ```bash
-   npx @truefoundry/trueforge@latest
-   ```
-   Open `http://localhost:8790`.
+```bash
+# Build the Docker image
+docker build -t contribforge:latest .
 
-2. **Add the MCP Connector:**
-   - Go to **Settings → Connectors** → **Add MCP Server**.
-   - **Name:** `contribforge-mcp`
-   - **Command:** `node`
-   - **Args:** `<path-to-repo>/contribforge-mcp/server.mjs`
-   - Click **Save**.
-
-3. **Configure the Agent:**
-   - Go to **Build Agent**.
-   - Model: Select `anthropic/claude-3-5-sonnet` or `google/gemini-2.0-flash`.
-   - MCP Tools: Enable `contribforge-mcp`.
-   - **Critical:** Toggle the **Approval Shield** ON next to `submit_pull_request`.
-   - Save agent as `ContribForge`.
+# Run the container
+docker run -p 4000:4000 \
+  -e GITHUB_TOKEN="your_personal_access_token" \
+  -e GEMINI_API_KEY="your_gemini_api_key" \
+  contribforge:latest
+```
+Access the dashboard at `http://localhost:4000`.
 
 ---
 
-## 🧠 Serena Integration
+## 🛠️ TrueForge Agent Harness & MCP Protocol
 
-ContribForge integrates with **Serena** for semantic codebase comprehension:
-- **Symbol-level indexing:** Rather than dumping entire repositories into LLM prompts (which blows context limits), the agent uses Serena's AST tools (`find_symbol`, `get_symbols_overview`, `find_referencing_symbols`) to inspect method signatures and call graphs.
-- **Architectural Memory:** Persists project patterns into Serena's project memory under `architecture/contribforge_overview`.
+ContribForge is architected to run seamlessly with the **TrueForge Agent Platform**:
+
+### TrueForge Spec (`trueforge-agent-spec.json`)
+The agent specification declares the MCP tools and governance rules:
+```json
+{
+  "name": "contribforge",
+  "description": "Autonomous open-source ticket resolver with hermetic sandboxed verification and human-in-the-loop pull request approval.",
+  "manifest": {
+    "mcp_servers": [
+      {
+        "name": "contribforge-mcp",
+        "preload": true,
+        "require_approval_for_tools": ["@destructive", "submit_pull_request"]
+      }
+    ]
+  }
+}
+```
+
+### Register with TrueForge CLI
+```bash
+npx -y @truefoundry/trueforge@latest agent register --spec trueforge-agent-spec.json
+```
 
 ---
 
-## 📋 Evaluation Criteria Mapping
+## 📋 Evaluation Criteria Mapping (Hackathon Rubric)
 
-| TrueFoundry Hackathon Criteria | ContribForge Implementation | Verification Proof |
+| Hackathon Evaluation Pillar | ContribForge Implementation | Verification Proof |
 | :--- | :--- | :--- |
-| **Real Tool Reached** | Live GitHub API (Octokit), Git CLI (`simple-git`), filesystem I/O | Live Pull Request created & verified |
-| **Code Run in Sandbox** | Hermetic sandbox execution with timeouts & path traversal isolation | `node --test test/repro_issue_14.test.js` executed Red then Green |
-| **Pause Before Irreversible** | `@destructive` tag on `submit_pull_request` | Interactive approval modal with Allow/Deny controls |
-| **Built on TrueForge** | Native `@truefoundry/trueforge` server, MCP stdio protocol, session engine | Port 8790 / Port 4000 live integration |
+| **Real Tool Reached** | Live GitHub REST API (Octokit), Git CLI (`simple-git`), filesystem I/O | Live pull requests created on user GitHub account (`@Tejender06`) |
+| **Code Run in Sandbox** | Hermetic sandbox execution with path traversal safeguards and process isolation | Reproduction test fails Red (Exit Code 1) then passes Green (Exit Code 0) |
+| **Pause Before Irreversible** | `@destructive` tag on `submit_pull_request` | Interactive approval modal with side-by-side Monaco diff review |
+| **Built on TrueForge** | Native TrueForge MCP server protocol (`contribforge-mcp`), agent manifest | `trueforge-agent-spec.json` + Port 4000 / Port 8790 integration |
+| **Production Code Quality** | Automatic upstream sync, pristine diff (+2/-2), no scratch files leaked | Verified clean PRs on [Tejender06/bitcoin](https://github.com/Tejender06/bitcoin/pull/6) |
 
 ---
 
-## 📁 Repository Structure
+## 📁 Repository Directory Structure
 
 ```
+ContribForge/
 ├── contribforge-mcp/          # Model Context Protocol (MCP) Server
-│   ├── server.mjs             # MCP tool registrations
-│   ├── test-mcp.mjs           # Unit test suite for MCP tools
-│   └── tools/                 # Sandbox, GitHub, Diff, and PR modules
+│   ├── server.mjs             # MCP stdio tool registration
+│   ├── test-mcp.mjs           # MCP unit test suite
+│   └── tools/                 # Sandbox, GitHub API, Diff, and PR modules
+│       ├── github.mjs         # Live issue extraction & URL parser
+│       ├── sandbox.mjs        # Hermetic sandbox runner & file I/O
+│       ├── diff.mjs           # Git diff parser & AST context localizer
+│       └── pr.mjs             # Octokit PR engine with fork upstream sync
 │
-├── demo-target-repo/          # Realistic open-source library for demo
-│   ├── src/config-parser.js   # Codebase with the edge-case bug
-│   └── test/                  # Existing unit test suite
-│
-├── orchestrator/              # Agent Execution Engine & Dashboard Server
-│   ├── agent-engine.mjs       # Test-Driven Agentics (TDA) execution loop
-│   ├── server.mjs             # Express + WebSocket real-time server
+├── orchestrator/              # Autonomous Agent Core
+│   ├── agent-engine.mjs       # Test-Driven Agentics (TDA) self-healing loop
+│   ├── server.mjs             # Express + WebSocket streaming server
 │   └── cli.mjs                # Interactive terminal runner
 │
-├── web-dashboard/             # Dark-mode dashboard for stage presentations
-│   ├── index.html             # Stepper, terminal stream, and HITL modal
-│   ├── styles.css             # Glassmorphism aesthetic
-│   └── app.js                 # WebSocket client
+├── web-dashboard/             # Presentation-Ready Web Dashboard
+│   ├── index.html             # Pipeline DAG, Monaco Diff, and HITL Modal
+│   ├── styles.css             # Glassmorphic dark aesthetic
+│   └── app.js                 # WebSocket client & autonomous event handlers
 │
-├── implementation.md          # Architectural Manifesto & Decision Rationale
-├── PITCH_DECK.md              # 3-minute stage presentation script & Q&A
-└── trueforge-agent-spec.json  # Exported TrueForge agent definition
+├── demo-target-repo/          # Multi-language test environments
+│   ├── src/config-parser.js   # JavaScript benchmark target
+│   └── test/functional/       # Python benchmark target (Bitcoin Core QA)
+│
+├── Dockerfile                 # Production multi-language container image
+├── .dockerignore              # Clean container build filter
+├── trueforge-agent-spec.json  # TrueForge Agent specification & MCP declarations
+└── README.md                  # Complete documentation
 ```
 
 ---
 
-## 🏆 Authors & Hackathon Team
-- **B S Tejender Singh** (Builder & Lead Architect)
-- **Built for:** Agents That Act — TrueFoundry × Polaris Hackathon (September 26, 2026, Bengaluru)
+## 🏆 Author & Hackathon Team
+
+- **B S Tejender Singh** — *Lead Architect & Builder*  
+  GitHub: [@Tejender06](https://github.com/Tejender06)
+- **Built for:** *Agents That Act — TrueFoundry × Polaris Hackathon*  
+  *Problem Statement: Ticket Resolver*
