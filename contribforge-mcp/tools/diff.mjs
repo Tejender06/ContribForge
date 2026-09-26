@@ -15,7 +15,11 @@ export async function getGitDiff() {
       };
     }
 
-    const diff = await git.diff();
+    await git.add(["-N", "."]).catch(() => {});
+    let diff = await git.diff();
+    if (!diff) {
+      diff = await git.diff(["HEAD"]).catch(() => "");
+    }
     const status = await git.status();
 
     return {

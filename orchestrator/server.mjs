@@ -55,8 +55,9 @@ app.post("/api/run", async (req, res) => {
     model = globalSettings.model
   } = req.body || {};
 
-  if (engine.state === "RUNNING" || engine.state === "PAUSED_FOR_APPROVAL") {
-    return res.status(409).json({ error: "A workflow is already active in session." });
+  if (engine && (engine.state === "RUNNING" || engine.state === "PAUSED_FOR_APPROVAL")) {
+    console.log("[Server] Active session detected. Cancelling prior session to start fresh workflow.");
+    engine.cancelWorkflow();
   }
 
   initEngine();

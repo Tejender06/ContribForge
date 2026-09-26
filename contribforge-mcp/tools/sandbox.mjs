@@ -1,8 +1,10 @@
 import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 
-const SANDBOX_DIR = path.resolve(process.env.SANDBOX_DIR || "../sandbox_workspace");
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const SANDBOX_DIR = path.resolve(process.env.SANDBOX_DIR || path.resolve(__dirname, "../../sandbox_workspace"));
 
 export function initSandbox(source = null) {
   if (!fs.existsSync(SANDBOX_DIR)) {
@@ -21,17 +23,19 @@ export function initSandbox(source = null) {
         console.warn(`[Sandbox Git Clone Warning] Could not clone ${source}: ${err.message}`);
       }
     } else if (fs.existsSync(source)) {
-      const files = fs.readdirSync(SANDBOX_DIR);
-      if (files.length === 0 || (files.length === 1 && files[0] === ".git")) {
-        copyRecursiveSync(source, SANDBOX_DIR);
-      }
+      copyRecursiveSync(source, SANDBOX_DIR, true);
     }
   }
 
-  // Ensure git repo initialized in sandbox so git diff works
+  // Ensure git repo initialized in sandbox so git diff works cleanly
   if (!fs.existsSync(path.join(SANDBOX_DIR, ".git"))) {
     try {
       execSync("git init && git config user.name 'ContribForge Agent' && git config user.email 'agent@contribforge.dev'", {
+        cwd: SANDBOX_DIR,
+        stdio: "ignore"
+      });
+      execSync("git checkout -B main", { cwd: SANDBOX_DIR, stdio: "ignore" });
+      execSync("git add -A && git commit -m 'Initial base benchmark' --allow-empty", {
         cwd: SANDBOX_DIR,
         stdio: "ignore"
       });
@@ -41,7 +45,7 @@ export function initSandbox(source = null) {
   return SANDBOX_DIR;
 }
 
-function copyRecursiveSync(src, dest) {
+function copyRecursiveSync(src, dest, overwrite = true) {
   const exists = fs.existsSync(src);
   const stats = exists && fs.statSync(src);
   const isDirectory = exists && stats.isDirectory();
@@ -49,10 +53,19 @@ function copyRecursiveSync(src, dest) {
     if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
     fs.readdirSync(src).forEach((childItemName) => {
       if (childItemName === "node_modules" || childItemName === ".git") return;
-      copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName));
+      copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName), overwrite);
     });
   } else {
-    fs.copyFileSync(src, dest);
+    if (overwrite || !fs.existsSync(dest)) {
+      try {
+        fs.copyFileSync(src, dest);
+      } catch (err) {
+        try {
+          fs.unlinkSync(dest);
+          fs.copyFileSync(src, dest);
+        } catch {}
+      }
+    }
   }
 }
 

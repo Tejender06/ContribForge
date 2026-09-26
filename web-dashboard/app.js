@@ -121,21 +121,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateKeyStatusBadges(geminiKey, githubToken) {
-    if (geminiKey && geminiKey.trim().length > 10) {
+    if (geminiKey && geminiKey.trim().startsWith("AIzaSy")) {
       geminiStatusBadge.textContent = "Active (Gemini 2.5 Flash)";
       geminiStatusBadge.className = "setting-badge configured";
       keyIndicatorDot.className = "key-indicator-dot active";
+    } else if (geminiKey && geminiKey.trim().length > 0) {
+      geminiStatusBadge.textContent = "Autonomous Heuristic (Key requires AIzaSy...)";
+      geminiStatusBadge.className = "setting-badge";
+      keyIndicatorDot.className = "key-indicator-dot";
     } else {
-      geminiStatusBadge.textContent = "Offline (Heuristic Mode)";
+      geminiStatusBadge.textContent = "Offline (Heuristic AST Mode)";
       geminiStatusBadge.className = "setting-badge";
       keyIndicatorDot.className = "key-indicator-dot";
     }
 
-    if (githubToken && githubToken.trim().length > 15) {
-      githubStatusBadge.textContent = "Authenticated (PR Enabled)";
+    if (githubToken && (githubToken.trim().startsWith("ghp_") || githubToken.trim().startsWith("github_pat_") || githubToken.trim().length > 20)) {
+      githubStatusBadge.textContent = "Authenticated (Live PR Enabled)";
       githubStatusBadge.className = "setting-badge configured";
     } else {
-      githubStatusBadge.textContent = "Public / Anonymous";
+      githubStatusBadge.textContent = "Public / Staged PR Mode";
       githubStatusBadge.className = "setting-badge";
     }
   }
