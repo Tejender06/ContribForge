@@ -3,6 +3,7 @@ import http from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import path from "path";
 import { fileURLToPath } from "url";
+import { execSync } from "child_process";
 import { ContribForgeEngine } from "./agent-engine.mjs";
 import { parseGitHubUrl, fetchGitHubIssue } from "../contribforge-mcp/tools/github.mjs";
 
@@ -153,6 +154,12 @@ app.get("/api/status", (req, res) => {
   });
 });
 
+wss.on("error", (err) => {
+  if (err.code !== "EADDRINUSE") {
+    console.error("[WebSocketServer Error]", err.message);
+  }
+});
+
 wss.on("connection", (ws) => {
   ws.send(
     JSON.stringify({
@@ -168,9 +175,71 @@ wss.on("connection", (ws) => {
   );
 });
 
-server.listen(PORT, () => {
-  console.log(`\n========================================================`);
-  console.log(`🚀 ContribForge Web Dashboard running at:`);
-  console.log(`👉 http://localhost:${PORT}`);
-  console.log(`========================================================\n`);
-});
+function releasePort(port) {
+  try {
+    if (process.platform === "win32") {
+      const out = execSync(`netstat -ano | findstr :${port}`, { encoding: "utf8" });
+      const lines = out.trim().split("\n");
+      for (const line of lines) {
+        const parts = line.trim().split(/\s+/);
+        const pid = parts[parts.length - 1];
+        if (pid && pid !== "0" && pid !== String(process.pid)) {
+          console.log(`[Server] Terminating stale process holding port ${port} (PID: ${pid})...`);
+          try {
+            execSync(`taskkill /F /PID ${pid}`, { stdio: "ignore" });
+          } catch {}
+        }
+      }
+    } else {
+      execSync(`lsof -ti:${port} | xargs kill -9`, { stdio: "ignore" });
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+let listenAttempts = 0;
+function listenOnPort(targetPort) {
+  server.removeAllListeners("error");
+
+  server.once("error", (err) => {
+    if (err.code === "EADDRINUSE") {
+      listenAttempts++;
+      if (listenAttempts <= 2) {
+        console.warn(`\n⚠️  Port ${targetPort} is currently in use.`);
+        console.log(`🔄 Attempting to free port ${targetPort}...`);
+        releasePort(targetPort);
+        setTimeout(() => {
+          listenOnPort(targetPort);
+        }, 500);
+      } else {
+        const nextPort = targetPort + 1;
+        console.warn(`⚠️  Could not release port ${targetPort}. Automatically switching to port ${nextPort}...`);
+        listenOnPort(nextPort);
+      }
+    } else {
+      console.error("[Server Error]", err);
+    }
+  });
+
+  server.listen(targetPort, () => {
+    console.log(`\n========================================================`);
+    console.log(`🚀 ContribForge Web Dashboard running at:`);
+    console.log(`👉 http://localhost:${targetPort}`);
+    console.log(`========================================================\n`);
+  });
+}
+
+listenOnPort(Number(PORT));
+
+// Graceful process exit
+function cleanup() {
+  try {
+    wss.close();
+    server.close();
+  } catch {}
+  process.exit(0);
+}
+process.on("SIGINT", cleanup);
+process.on("SIGTERM", cleanup);
