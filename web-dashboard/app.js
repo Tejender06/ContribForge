@@ -145,6 +145,13 @@ document.addEventListener("DOMContentLoaded", () => {
       number: 42,
       url: "https://github.com/truefoundry/micro-config/issues/42",
       desc: "parseLogLevel case-insensitive log level normalization"
+    },
+    "36216": {
+      owner: "bitcoin",
+      repo: "bitcoin",
+      number: 36216,
+      url: "https://github.com/bitcoin/bitcoin/issues/36216",
+      desc: "qa: Intermittent failure in interface_http.py socket timeout"
     }
   };
 
@@ -284,12 +291,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  function sanitizeGitHubUrl(raw) {
+    if (!raw) return "";
+    const str = String(raw).trim();
+    const match = str.match(/https?:\/\/github\.com\/[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+(?:\/issues\/|#)[0-9]+/);
+    if (match) return match[0];
+    return str;
+  }
+
   // Quick Chips Handler
   document.querySelectorAll(".quick-chip").forEach((chip) => {
     chip.addEventListener("click", () => {
       document.querySelectorAll(".quick-chip").forEach((c) => c.classList.remove("active"));
       chip.classList.add("active");
-      const url = chip.dataset.url;
+      const url = sanitizeGitHubUrl(chip.dataset.url);
       if (url) {
         issueUrlInput.value = url;
         loadIssueFromUrl();
@@ -299,8 +314,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Load Issue URL Handler
   async function loadIssueFromUrl() {
-    const url = issueUrlInput.value.trim();
+    const rawUrl = issueUrlInput.value.trim();
+    const url = sanitizeGitHubUrl(rawUrl);
     if (!url) return;
+    issueUrlInput.value = url;
 
     appendTerminal(`Loading GitHub issue from URL: ${url}...`, "t-info");
     try {
@@ -330,6 +347,16 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       loadIssueFromUrl();
     }
+  });
+
+  issueUrlInput.addEventListener("focus", () => {
+    issueUrlInput.select();
+  });
+
+  issueUrlInput.addEventListener("paste", () => {
+    setTimeout(() => {
+      issueUrlInput.value = sanitizeGitHubUrl(issueUrlInput.value);
+    }, 0);
   });
 
   // Initialize with Issue #14 URL
@@ -583,7 +610,7 @@ document.addEventListener("DOMContentLoaded", () => {
     timerInterval = setInterval(updateTimer, 1000);
     setNodeActive(0);
 
-    const issueUrl = issueUrlInput.value.trim();
+    const issueUrl = sanitizeGitHubUrl(issueUrlInput.value.trim());
     const geminiKey = localStorage.getItem("contribforge_gemini_key") || "";
     const githubToken = localStorage.getItem("contribforge_github_token") || "";
     const model = localStorage.getItem("contribforge_model") || "gemini-2.5-flash";
