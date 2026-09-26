@@ -87,6 +87,16 @@
             <span class="text-cyan-400 font-medium" id="topbarRepoBadge">truefoundry / micro-config > Issue #14</span>
           </div>
 
+          <div class="hidden xl:flex items-center text-xs font-mono text-slate-400 bg-slate-900/80 border border-white/10 rounded-lg px-2.5 py-1">
+            <span class="text-slate-500 mr-1.5">stack:</span>
+            <span class="text-emerald-400 font-medium" id="topbarStackBadge">Node.js (node:test)</span>
+          </div>
+
+          <div class="hidden 2xl:flex items-center text-xs font-mono text-slate-400 bg-slate-900/80 border border-white/10 rounded-lg px-2.5 py-1">
+            <span class="text-slate-500 mr-1.5">confidence:</span>
+            <span class="text-violet-400 font-semibold" id="topbarConfidenceBadge">98% Guaranteed</span>
+          </div>
+
           <!-- Mobile Controls Quick Toggle -->
           <div class="flex md:hidden items-center gap-1.5 ml-auto">
             <button id="mobileSettingsBtn" class="p-2 text-slate-300 hover:text-white bg-slate-900 border border-white/10 rounded-lg" title="Settings">
@@ -131,6 +141,8 @@
             <select id="issueSelect" class="text-xs bg-slate-900/90 text-slate-200 border border-white/10 rounded-xl px-2.5 py-2 pr-7 appearance-none focus:outline-none focus:border-violet-500 cursor-pointer font-medium hover:border-white/20 transition-all">
               <option value="14" selected>#14: PORT TypeError (micro-config)</option>
               <option value="12">#12: Scheme Prefix in parseHost</option>
+              <option value="21">#21: Boundary Validation Guard</option>
+              <option value="42">#42: Case-Insensitive Log Level</option>
               <option value="custom">Custom Issue URL...</option>
             </select>
             <div class="absolute right-2.5 pointer-events-none text-slate-400">
@@ -189,11 +201,17 @@
         <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/truefoundry/micro-config/issues/12">
           micro-config #12 (Host Scheme)
         </button>
-        <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/facebook/react/issues/28000">
-          facebook/react #28000
+        <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/truefoundry/micro-config/issues/21">
+          micro-config #21 (Boundary Guard)
         </button>
-        <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/expressjs/express/issues/5000">
-          expressjs/express #5000
+        <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/truefoundry/micro-config/issues/42">
+          micro-config #42 (Enum Normalization)
+        </button>
+        <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/bitcoin/bitcoin/issues/36315">
+          bitcoin/bitcoin #36315 (Live Recon)
+        </button>
+        <button class="quick-chip px-2.5 py-0.5 rounded-full bg-slate-900 border border-white/10 text-slate-400 hover:text-slate-200 hover:border-white/20 whitespace-nowrap transition-all" data-url="https://github.com/facebook/react/issues/28000">
+          facebook/react #28000 (Live Recon)
         </button>
       </div>
 

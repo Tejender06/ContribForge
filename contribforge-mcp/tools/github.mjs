@@ -51,6 +51,50 @@ When \`HOST\` is specified with a scheme prefix like \`http://0.0.0.0\` or \`htt
         body: "Good catch. Let's add regex cleaning to strip schemes before trimming."
       }
     ]
+  },
+  21: {
+    number: 21,
+    title: "parsePortConfig fails to reject negative or out-of-range port numbers",
+    author: "sec-audit",
+    state: "open",
+    labels: ["bug", "security", "validation"],
+    body: `### Description
+Passing a negative port or port > 65535 should throw a descriptive validation error instead of returning invalid integers.
+
+### Expected Behavior
+\`parsePortConfig(-1)\` and \`parsePortConfig(70000)\` should throw \`Invalid port\`.`,
+    comments: [
+      {
+        author: "core-maintainer",
+        body: "Confirmed. Valid TCP ports must be in the range [1, 65535]."
+      }
+    ]
+  },
+  35: {
+    number: 35,
+    title: "Database URL parsing does not fall back when protocol is omitted",
+    author: "backend-tim",
+    state: "open",
+    labels: ["bug", "database"],
+    body: `### Description
+When \`DATABASE_URL\` is provided without a scheme or protocol prefix (e.g. \`localhost/mydb\`), \`loadConfig\` should normalize or default gracefully.
+
+### Expected Behavior
+Should default to in-memory sqlite when unset, or prefix with sqlite:// when relative.`,
+    comments: []
+  },
+  42: {
+    number: 42,
+    title: "parseLogLevel rejects uppercase log levels ('INFO', 'DEBUG')",
+    author: "devops-alex",
+    state: "open",
+    labels: ["bug", "enhancement"],
+    body: `### Description
+Environment variables often use uppercase \`LOG_LEVEL=DEBUG\` or \`LOG_LEVEL=INFO\`. Currently it only checks lowercase, failing to recognize valid levels.
+
+### Expected Behavior
+\`parseLogLevel('DEBUG')\` should return \`'debug'\` without falling back to info.`,
+    comments: []
   }
 };
 

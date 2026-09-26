@@ -16,6 +16,8 @@ import {
 } from "./tools/sandbox.mjs";
 import { getGitDiff } from "./tools/diff.mjs";
 import { submitPullRequest } from "./tools/pr.mjs";
+import { rankCulpritFiles, scanCodebaseFiles } from "../orchestrator/codebase-indexer.mjs";
+import { detectRepositoryStack } from "../orchestrator/test-runner-detector.mjs";
 
 dotenv.config();
 
@@ -97,6 +99,26 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             sub_path: { type: "string", description: "Optional relative subfolder path (defaults to root)" }
           }
+        }
+      },
+      {
+        name: "index_codebase",
+        description: "Scans and ranks candidate culprit source files matching an issue title, error message, or stack trace.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            issue_title: { type: "string", description: "Title of the issue or error description" },
+            issue_body: { type: "string", description: "Full issue body or error trace" }
+          },
+          required: ["issue_title"]
+        }
+      },
+      {
+        name: "detect_test_framework",
+        description: "Inspects the sandbox workspace to determine runtime language, test runner, and test execution commands.",
+        inputSchema: {
+          type: "object",
+          properties: {}
         }
       },
       {
@@ -186,6 +208,25 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const diffResult = await getGitDiff();
         return {
           content: [{ type: "text", text: JSON.stringify(diffResult, null, 2) }]
+        };
+      }
+
+      case "index_codebase": {
+        const sandboxDir = getSandboxPath();
+        const ranked = rankCulpritFiles(sandboxDir, {
+          title: args.issue_title || "",
+          body: args.issue_body || ""
+        });
+        return {
+          content: [{ type: "text", text: JSON.stringify(ranked, null, 2) }]
+        };
+      }
+
+      case "detect_test_framework": {
+        const sandboxDir = getSandboxPath();
+        const stack = detectRepositoryStack(sandboxDir);
+        return {
+          content: [{ type: "text", text: JSON.stringify(stack, null, 2) }]
         };
       }
 

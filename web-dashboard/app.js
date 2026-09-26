@@ -86,8 +86,10 @@ document.addEventListener("DOMContentLoaded", () => {
     "Sandbox Initialized": 0,
     "Fetching GitHub Issue Context": 0,
     "Issue Context Extracted": 0,
+    "Indexing Codebase & Localizing Culprit Files": 1,
+    "Codebase Indexed & Culprit Localized": 1,
     "Reasoning with gemini-2.5-flash": 1,
-    "Reasoning with gemini-1.5-pro": 1,
+    "Reasoning with gemini-2.5-pro": 1,
     "Gemini Synthesized Reproduction Test": 1,
     "Activating Autonomous Heuristic AST Engine": 1,
     "Synthesizing Reproduction Test Script": 1,
@@ -95,12 +97,20 @@ document.addEventListener("DOMContentLoaded", () => {
     "Executing Reproduction in Sandbox (Empirical Red Check)": 1,
     "Defect Successfully Confirmed (🔴 RED)": 1,
     "Synthesizing Surgical Patch": 2,
+    "Synthesizing Surgical Patch (Turn 1/3)": 2,
+    "Synthesizing Surgical Patch (Turn 2/3)": 2,
+    "Synthesizing Surgical Patch (Turn 3/3)": 2,
     "Patch Applied in Sandbox": 2,
     "Verifying Reproduction Passes (Empirical Green Check)": 3,
+    "Verifying Reproduction Passes (Green Check Turn 1)": 3,
+    "Verifying Reproduction Passes (Green Check Turn 2)": 3,
+    "Verifying Reproduction Passes (Green Check Turn 3)": 3,
     "Reproduction Test Passed (🟢 GREEN)": 3,
+    "Self-Healing AST Converged (🟢 GREEN)": 3,
     "Running Full Test Suite (Zero-Regression Check)": 3,
     "Full Test Suite Passed: Zero Regressions": 3,
     "Git Diff Generated": 3,
+    "Unified Git Diff & Confidence Scored": 3,
     "🛡️ PAUSED: Human Approval Required for Irreversible Action": 4,
     "User Approval Granted: Executing submit_pull_request": 5,
     "Pull Request Successfully Created!": 5
@@ -121,6 +131,20 @@ document.addEventListener("DOMContentLoaded", () => {
       number: 12,
       url: "https://github.com/truefoundry/micro-config/issues/12",
       desc: "parseHost scheme prefix stripping for socket bind"
+    },
+    "21": {
+      owner: "truefoundry",
+      repo: "micro-config",
+      number: 21,
+      url: "https://github.com/truefoundry/micro-config/issues/21",
+      desc: "Boundary validation guard rejecting negative and overflow ports"
+    },
+    "42": {
+      owner: "truefoundry",
+      repo: "micro-config",
+      number: 42,
+      url: "https://github.com/truefoundry/micro-config/issues/42",
+      desc: "parseLogLevel case-insensitive log level normalization"
     }
   };
 
@@ -480,9 +504,24 @@ document.addEventListener("DOMContentLoaded", () => {
         if (step.diff) renderDiff(step.diff);
       }
 
+      if (data.type === "codebase_indexed") {
+        const topbarStackBadge = document.getElementById("topbarStackBadge");
+        if (topbarStackBadge && data.stackInfo) {
+          topbarStackBadge.textContent = `${data.stackInfo.language} (${data.stackInfo.runner})`;
+        }
+        if (data.topCandidate) {
+          appendTerminal(`🔍 Codebase Indexer: Localized culprit file '${data.topCandidate.relPath}' (${data.topCandidate.score}% match)`, "t-cmd", "reasoning");
+        }
+      }
+
       if (data.type === "approval_required") {
         pipelineStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span> <span>PAUSED (HITL GATE)</span>`;
         pipelineStatus.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-amber-500/20 border border-amber-500/40 text-amber-300";
+
+        if (data.confidenceScore) {
+          const topbarConfidenceBadge = document.getElementById("topbarConfidenceBadge");
+          if (topbarConfidenceBadge) topbarConfidenceBadge.textContent = `${data.confidenceScore}% Guaranteed`;
+        }
 
         modalTarget.textContent = `${data.payload.owner}/${data.payload.repo}`;
         modalBranch.textContent = data.payload.head_branch;
